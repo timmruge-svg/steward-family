@@ -237,14 +237,14 @@ body {
   <div class="nav-item" data-panel="tasks"><span class="nav-icon">✅</span>Tasks</div>
 
   <div class="sidebar-footer">
-    <div class="avatar">JS</div>
-    <div><div class="user-name">Jamie S.</div><div class="user-plan">Chief of Staff</div></div>
+    <div class="avatar" id="userAvatar">?</div>
+    <div><div class="user-name" id="userName">My Account</div><div class="user-plan" id="userPlan">Free Trial</div></div>
   </div>
 </nav>
 
 <div id="main">
   <div id="topbar">
-    <div id="topbar-title">Good morning, Jamie 👋</div>
+    <div id="topbar-title">Welcome 👋</div>
     <div class="status-pill"><div class="status-dot"></div>Agents Active</div>
   </div>
   <div id="content">
@@ -252,29 +252,26 @@ body {
     <!-- DASHBOARD -->
     <div class="panel active" id="panel-dashboard">
       <div class="stats-grid">
-        <div class="stat-card"><span class="stat-icon">💳</span><div class="stat-val">$1,847</div><div class="stat-lbl">Bills Due</div><div class="stat-hint amber">3 need attention</div></div>
-        <div class="stat-card"><span class="stat-icon">📦</span><div class="stat-val">7</div><div class="stat-lbl">Low Supplies</div><div class="stat-hint red">Reorder suggested</div></div>
-        <div class="stat-card"><span class="stat-icon">🏷️</span><div class="stat-val">$213</div><div class="stat-lbl">Savings Found</div><div class="stat-hint green">↑ 18% this week</div></div>
-        <div class="stat-card"><span class="stat-icon">📅</span><div class="stat-val">5</div><div class="stat-lbl">Events This Week</div><div class="stat-hint blue">2 reminders set</div></div>
+        <div class="stat-card"><span class="stat-icon">💳</span><div class="stat-val" id="stat-bills">—</div><div class="stat-lbl">Bills Tracked</div><div class="stat-hint amber" id="stat-bills-hint">Add bills to get started</div></div>
+        <div class="stat-card"><span class="stat-icon">👨‍👩‍👧‍👦</span><div class="stat-val" id="stat-family">—</div><div class="stat-lbl">Family Members</div><div class="stat-hint blue" id="stat-family-hint">Set up in onboarding</div></div>
+        <div class="stat-card"><span class="stat-icon">🔌</span><div class="stat-val" id="stat-ints">—</div><div class="stat-lbl">Integrations</div><div class="stat-hint green" id="stat-ints-hint">Connect providers</div></div>
+        <div class="stat-card"><span class="stat-icon">⭐</span><div class="stat-val" id="stat-plan">—</div><div class="stat-lbl">Your Plan</div><div class="stat-hint blue" id="stat-plan-hint">Active</div></div>
       </div>
       <div class="two-col">
         <div class="card">
-          <div class="card-head"><span class="card-title">📬 Upcoming Bills</span><span class="card-action" onclick="navTo('bills')">View all →</span></div>
-          <div class="card-body">
-            <div class="bill-row"><div class="bill-left"><span class="bill-icon">⚡</span><div><div class="bill-name">Electric — ConEd</div><div class="bill-due">Due in 3 days</div></div></div><div class="bill-right"><span class="bill-amount">$142</span><span class="badge badge-amber">Due Soon</span></div></div>
-            <div class="bill-row"><div class="bill-left"><span class="bill-icon">📡</span><div><div class="bill-name">Internet — Comcast</div><div class="bill-due">Due in 7 days</div></div></div><div class="bill-right"><span class="bill-amount">$89</span><span class="badge badge-amber">Due Soon</span></div></div>
-            <div class="bill-row"><div class="bill-left"><span class="bill-icon">🏠</span><div><div class="bill-name">Mortgage — Chase</div><div class="bill-due">Due in 12 days</div></div></div><div class="bill-right"><span class="bill-amount">$2,100</span><span class="badge badge-green">Auto-Pay</span></div></div>
-            <div class="bill-row"><div class="bill-left"><span class="bill-icon">🚗</span><div><div class="bill-name">Car Insurance</div><div class="bill-due">Due in 18 days</div></div></div><div class="bill-right"><span class="bill-amount">$187</span><span class="badge badge-green">Auto-Pay</span></div></div>
+          <div class="card-head"><span class="card-title">📬 Your Bills</span><span class="card-action" onclick="navTo('bills')">View all →</span></div>
+          <div class="card-body" id="dash-bills">
+            <div style="font-size:0.75rem;color:#4b5563;padding:0.5rem 0">No bills added yet. <a href="steward-signup.html" style="color:#38d9a9;font-weight:700">Complete setup →</a></div>
           </div>
         </div>
         <div class="card">
-          <div class="card-head"><span class="card-title">✅ Family To-Do</span><span class="card-action">+ Add</span></div>
-          <div class="card-body">
-            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Order school supplies for Mia</div><div class="task-meta">Best deal found on Amazon</div></div></div>
-            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Pay electric bill ($142)</div><div class="task-meta">Due April 12 — 3 days away</div></div></div>
-            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)"></div><div><div class="task-text done">Schedule Leo's check-up</div><div class="task-meta">Done ✓ April 9 at 10:30am</div></div></div>
-            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Compare car insurance quotes</div><div class="task-meta">3 cheaper options found</div></div></div>
-            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Pack soccer snacks (your turn!)</div><div class="task-meta">Thursday 4pm · Riverside Park</div></div></div>
+          <div class="card-head"><span class="card-title">✅ Getting Started</span><span class="card-action">+ Add task</span></div>
+          <div class="card-body" id="dash-tasks">
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)"></div><div><div class="task-text done">Create your account</div><div class="task-meta">Done!</div></div></div>
+            <div class="task-row"><div class="task-check" id="task-bills-check" onclick="toggleTask(this)"></div><div><div class="task-text" id="task-bills-text">Add your bills</div><div class="task-meta">Go to Bill Pay section</div></div></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Connect your first provider</div><div class="task-meta">Go to AI Agents</div></div></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Chat with your Bill Manager</div><div class="task-meta">Try the AI Agents tab</div></div></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Set up your family schedule</div><div class="task-meta">Go to Schedule section</div></div></div>
           </div>
         </div>
       </div>
@@ -306,14 +303,9 @@ body {
 
     <!-- BILLS -->
     <div class="panel" id="panel-bills">
-      <div class="toolbar"><div><h2>Bill Pay Dashboard</h2><p>3 bills need attention · $231 due in 7 days</p></div><div class="toolbar-btns"><button class="btn-ghost">+ Add Bill</button><button class="btn" onclick="navTo('agents')">🤖 Ask Agent</button></div></div>
-      <div class="bill-cards-grid">
-        <div class="bill-card urgent"><div class="bill-card-top"><span class="bill-card-icon">⚡</span><span class="badge badge-amber">Due in 3 days</span></div><div class="bill-card-name">Electric — ConEd</div><div class="bill-card-cat">Utilities</div><div class="bill-card-amount">$142.00</div><div class="bill-card-due soon">⚠ April 12, 2026</div><div class="bill-card-actions"><button class="btn btn-sm">Pay Now</button><button class="btn-ghost btn-sm">Auto-Pay</button></div></div>
-        <div class="bill-card urgent"><div class="bill-card-top"><span class="bill-card-icon">📡</span><span class="badge badge-amber">Due in 7 days</span></div><div class="bill-card-name">Internet — Comcast</div><div class="bill-card-cat">Utilities</div><div class="bill-card-amount">$89.00</div><div class="bill-card-due soon">April 16, 2026</div><div class="bill-card-actions"><button class="btn btn-sm">Pay Now</button><button class="btn-ghost btn-sm">Auto-Pay</button></div></div>
-        <div class="bill-card"><div class="bill-card-top"><span class="bill-card-icon">🏠</span><span class="badge badge-green">Auto-Pay On</span></div><div class="bill-card-name">Mortgage — Chase</div><div class="bill-card-cat">Housing</div><div class="bill-card-amount">$2,100.00</div><div class="bill-card-due">April 21, 2026</div><div class="bill-card-actions"><button class="btn-ghost btn-sm">Manage</button></div></div>
-        <div class="bill-card"><div class="bill-card-top"><span class="bill-card-icon">🚗</span><span class="badge badge-green">Auto-Pay On</span></div><div class="bill-card-name">Car Insurance — Geico</div><div class="bill-card-cat">Insurance</div><div class="bill-card-amount">$187.00</div><div class="bill-card-due">April 27, 2026</div><div class="bill-card-actions"><button class="btn-ghost btn-sm">Manage</button></div></div>
-        <div class="bill-card urgent"><div class="bill-card-top"><span class="bill-card-icon">🎓</span><span class="badge badge-amber">Due in 14 days</span></div><div class="bill-card-name">School Lunch Account</div><div class="bill-card-cat">Education</div><div class="bill-card-amount">$60.00</div><div class="bill-card-due">April 23, 2026</div><div class="bill-card-actions"><button class="btn btn-sm">Pay Now</button><button class="btn-ghost btn-sm">Auto-Pay</button></div></div>
-        <div class="bill-card"><div class="bill-card-top"><span class="bill-card-icon">📱</span><span class="badge badge-green">Auto-Pay On</span></div><div class="bill-card-name">Phone Plan — T-Mobile</div><div class="bill-card-cat">Telecom</div><div class="bill-card-amount">$110.00</div><div class="bill-card-due">April 30, 2026</div><div class="bill-card-actions"><button class="btn-ghost btn-sm">Manage</button></div></div>
+      <div class="toolbar"><div><h2>Bill Pay Dashboard</h2><p id="bills-subtitle">No bills added yet</p></div><div class="toolbar-btns"><button class="btn-ghost">+ Add Bill</button><button class="btn" onclick="navTo('agents')">🤖 Ask Agent</button></div></div>
+      <div class="bill-cards-grid" id="bills-cards-grid">
+        <div style="font-size:0.78rem;color:#4b5563;padding:1rem">No bills found. <a href="steward-signup.html" style="color:#38d9a9;font-weight:700">Go back to setup →</a></div>
       </div>
     </div>
 
@@ -362,39 +354,37 @@ body {
 
     <!-- SCHEDULE -->
     <div class="panel" id="panel-schedule">
-      <div class="toolbar"><div><h2>Family Schedule</h2><p>Week of April 7–13, 2026</p></div><button class="btn-ghost">+ Add Event</button></div>
+      <div class="toolbar"><div><h2>Family Schedule</h2><p>Connect Google Calendar to see your events</p></div><button class="btn-ghost">+ Add Event</button></div>
       <div class="cal-week">
-        <div class="cal-day"><div class="cal-day-name">Mon</div><div class="cal-day-num">7</div></div>
-        <div class="cal-day"><div class="cal-day-name">Tue</div><div class="cal-day-num">8</div><div class="cal-dot"></div></div>
-        <div class="cal-day today"><div class="cal-day-name">Wed</div><div class="cal-day-num">9</div><div class="cal-dot"></div></div>
-        <div class="cal-day"><div class="cal-day-name">Thu</div><div class="cal-day-num">10</div><div class="cal-dot"></div></div>
-        <div class="cal-day"><div class="cal-day-name">Fri</div><div class="cal-day-num">11</div><div class="cal-dot"></div></div>
-        <div class="cal-day"><div class="cal-day-name">Sat</div><div class="cal-day-num">12</div></div>
-        <div class="cal-day"><div class="cal-day-name">Sun</div><div class="cal-day-num">13</div><div class="cal-dot"></div></div>
+        <div class="cal-day"><div class="cal-day-name">Mon</div><div class="cal-day-num" id="cal-mon">—</div></div>
+        <div class="cal-day"><div class="cal-day-name">Tue</div><div class="cal-day-num" id="cal-tue">—</div></div>
+        <div class="cal-day today"><div class="cal-day-name">Wed</div><div class="cal-day-num" id="cal-wed">—</div></div>
+        <div class="cal-day"><div class="cal-day-name">Thu</div><div class="cal-day-num" id="cal-thu">—</div></div>
+        <div class="cal-day"><div class="cal-day-name">Fri</div><div class="cal-day-num" id="cal-fri">—</div></div>
+        <div class="cal-day"><div class="cal-day-name">Sat</div><div class="cal-day-num" id="cal-sat">—</div></div>
+        <div class="cal-day"><div class="cal-day-name">Sun</div><div class="cal-day-num" id="cal-sun">—</div></div>
       </div>
-      <div class="event-item school"><span class="event-icon">🎓</span><span class="event-time">8:00 AM</span><div><div class="event-name">Mia — School Science Fair</div><div class="event-detail">Westview Elementary · Bring tri-fold board</div></div></div>
-      <div class="event-item medical"><span class="event-icon">🏥</span><span class="event-time">10:30 AM</span><div><div class="event-name">Leo — Pediatric Check-up</div><div class="event-detail">Dr. Patel · 45 Oak St · Bring insurance card</div></div></div>
-      <div class="event-item activity"><span class="event-icon">⚽</span><span class="event-time">4:00 PM</span><div><div class="event-name">Mia — Soccer Practice</div><div class="event-detail">Riverside Park, Field 3 · Bring snacks (your turn)</div></div></div>
-      <div class="event-item family"><span class="event-icon">🛒</span><span class="event-time">6:30 PM</span><div><div class="event-name">Costco Run</div><div class="event-detail">Steward prepared shopping list · Est. $112</div></div></div>
-      <div class="event-item school"><span class="event-icon">🎨</span><span class="event-time">Fri 2:00 PM</span><div><div class="event-name">Leo — Art Class Recital</div><div class="event-detail">Room 14B · Parents welcome</div></div></div>
-      <div class="event-item family"><span class="event-icon">🍕</span><span class="event-time">Sun 6:00 PM</span><div><div class="event-name">Family Dinner — Grandma's</div><div class="event-detail">Bring dessert · Steward ordered bakery cake</div></div></div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">📅 Upcoming Events</span></div>
+        <div class="card-body">
+          <div style="font-size:0.75rem;color:#4b5563;padding:0.5rem 0">No events yet. Google Calendar integration coming soon — <a href="steward-signup.html" style="color:#38d9a9;font-weight:700">request early access →</a></div>
+        </div>
+      </div>
     </div>
 
     <!-- TASKS -->
     <div class="panel" id="panel-tasks">
-      <div class="toolbar"><div><h2>Family Tasks</h2><p>4 open · 1 completed today</p></div><button class="btn">+ Add Task</button></div>
+      <div class="toolbar"><div><h2>Family Tasks</h2><p id="tasks-subtitle">Add tasks to get started</p></div><button class="btn" onclick="addQuickTask()">+ Add Task</button></div>
       <div class="two-col">
-        <div class="card"><div class="card-head"><span class="card-title">🔴 This Week</span></div><div class="card-body">
-          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Order school supplies for Mia</div><div class="task-meta">Steward found best deal on Amazon</div></div></div>
-          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Pay electric bill ($142)</div><div class="task-meta">Due April 12</div></div></div>
-          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Pack soccer snacks for Thursday</div><div class="task-meta">It's your turn for team snacks</div></div></div>
-          <div class="task-row"><div class="task-check done" onclick="toggleTask(this)"></div><div><div class="task-text done">Schedule Leo's check-up</div><div class="task-meta">Done ✓ April 9 at 10:30am</div></div></div>
+        <div class="card"><div class="card-head"><span class="card-title">🔴 This Week</span></div><div class="card-body" id="tasks-week">
+          <div class="task-row"><div class="task-check done" onclick="toggleTask(this)"></div><div><div class="task-text done">Create Steward account</div><div class="task-meta">Done!</div></div></div>
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Try the AI agents</div><div class="task-meta">Click AI Agents in sidebar</div></div></div>
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Add your first bill</div><div class="task-meta">Click Bill Pay in sidebar</div></div></div>
         </div></div>
-        <div class="card"><div class="card-head"><span class="card-title">📋 Upcoming</span></div><div class="card-body">
-          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Compare car insurance quotes</div><div class="task-meta">Renewal May 1 · 3 cheaper options found</div></div></div>
-          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Register kids for summer camp</div><div class="task-meta">Deadline May 15 · 4 camps shortlisted</div></div></div>
-          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Refill prescription — Mia</div><div class="task-meta">Estimated: end of month</div></div></div>
-          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Plan Leo's birthday party</div><div class="task-meta">May 22 · 6 weeks away</div></div></div>
+        <div class="card"><div class="card-head"><span class="card-title">📋 Upcoming</span></div><div class="card-body" id="tasks-upcoming">
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Connect Google Calendar</div><div class="task-meta">Coming soon</div></div></div>
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Connect energy provider</div><div class="task-meta">Go to integrations</div></div></div>
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Invite your partner</div><div class="task-meta">Coming soon</div></div></div>
         </div></div>
       </div>
     </div>
@@ -590,50 +580,144 @@ async function sendChat(){
 renderBudget();
 initChat();
 
-// PERSONALIZATION - reads user data from signup
+// LOAD USER DATA FROM SIGNUP
 (function() {
   var raw = localStorage.getItem('stewardUser');
-  if(!raw) return;
+  if(!raw) { return; }
   try {
     var u = JSON.parse(raw);
+
+    // ── GREETING ──
     var firstName = u.name ? u.name.split(' ')[0] : 'there';
     var hour = new Date().getHours();
     var greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-
-    // Greeting
     var t = document.getElementById('topbar-title');
-    if(t) t.textContent = greeting + ', ' + firstName + ' ';
+    if(t) t.textContent = greeting + ', ' + firstName + ' \uD83D\uDC4B';
 
-    // Sidebar name + plan
-    var un = document.querySelector('.user-name');
+    // ── SIDEBAR ──
+    var un = document.getElementById('userName');
     if(un) un.textContent = u.name || 'My Account';
-    var up = document.querySelector('.user-plan');
+    var up = document.getElementById('userPlan');
     if(up && u.plan) up.textContent = u.plan.charAt(0).toUpperCase() + u.plan.slice(1) + ' Plan';
-
-    // Avatar initials
-    var av = document.querySelector('.avatar');
+    var av = document.getElementById('userAvatar');
     if(av && u.name) {
-      var parts = u.name.split(' ');
+      var parts = u.name.trim().split(' ');
       av.textContent = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
     }
 
-    // Personalize AI agents with real user data
-    if(typeof AGENTS !== 'undefined') {
-      var ctx = 'Family: ' + (u.familyName || 'this family') + '. ';
-      if(u.kids && u.kids.length > 0) {
-        ctx += 'Kids: ' + u.kids.map(function(k){ return k.name + ' age ' + k.age; }).join(', ') + '. ';
-      }
-      if(u.city) ctx += 'City: ' + u.city + '. ';
-      if(u.bills && u.bills.length > 0) {
-        ctx += 'Their bills: ' + u.bills.map(function(b){ return b.name + (b.amount ? ' $' + b.amount : '') + (b.provider ? ' (' + b.provider + ')' : ''); }).join(', ') + '. ';
-      }
-      AGENTS.general_agent.system = 'You are Steward, AI Chief of Staff for a busy parent. ' + ctx + 'Be warm, helpful, and action-oriented.';
-      AGENTS.bills_agent.system = 'You are Steward Bill Manager. ' + ctx + 'Help track and manage their specific bills. Be concise and decisive.';
-      AGENTS.schedule_agent.system = 'You are Steward Family Scheduler. ' + ctx + 'Help coordinate the family calendar. Be warm and practical.';
-      AGENTS.supplies_agent.system = 'You are Steward Supply Orderer. ' + ctx + 'Help order household supplies efficiently. Suggest Amazon, Target, or Costco.';
+    // ── STAT CARDS ──
+    var sb = document.getElementById('stat-bills');
+    if(sb) sb.textContent = u.bills ? u.bills.length : '0';
+    var sbh = document.getElementById('stat-bills-hint');
+    if(sbh) sbh.textContent = u.bills && u.bills.length > 0 ? u.bills.length + ' bills tracked' : 'Add bills to get started';
+
+    var sf = document.getElementById('stat-family');
+    if(sf) sf.textContent = u.householdSize || '—';
+    var sfh = document.getElementById('stat-family-hint');
+    if(sfh) sfh.textContent = u.kids && u.kids.length > 0 ? u.kids.map(function(k){return k.name;}).join(', ') : u.city || 'Your household';
+
+    var si = document.getElementById('stat-ints');
+    if(si) si.textContent = u.integrations ? u.integrations.length : '0';
+    var sih = document.getElementById('stat-ints-hint');
+    if(sih) sih.textContent = u.integrations && u.integrations.length > 0 ? u.integrations.join(', ') : 'Connect providers';
+
+    var sp = document.getElementById('stat-plan');
+    if(sp) sp.textContent = u.plan ? u.plan.charAt(0).toUpperCase() + u.plan.slice(1) : '—';
+    var sph = document.getElementById('stat-plan-hint');
+    if(sph) sph.textContent = u.planPrice === '0.00' ? 'Free (promo applied)' : '$' + u.planPrice + '/mo';
+
+    // ── DASHBOARD BILLS PREVIEW ──
+    var dashBills = document.getElementById('dash-bills');
+    if(dashBills && u.bills && u.bills.length > 0) {
+      var billIcons = { 'electric':'⚡', 'energy':'⚡', 'internet':'📡', 'cable':'📡', 'mortgage':'🏠', 'rent':'🏠', 'insurance':'🚗', 'phone':'📱', 'water':'💧', 'school':'🎓', 'gym':'💪', 'streaming':'🎬' };
+      var html = '';
+      u.bills.slice(0,4).forEach(function(b) {
+        var iconKey = Object.keys(billIcons).find(function(k){ return b.name.toLowerCase().includes(k); });
+        var icon = iconKey ? billIcons[iconKey] : '💳';
+        var amt = b.amount ? '$' + parseFloat(b.amount).toFixed(0) : '—';
+        html += '<div class="bill-row"><div class="bill-left"><span class="bill-icon">'+icon+'</span><div><div class="bill-name">'+b.name+(b.provider?' — '+b.provider:'')+'</div></div></div><div class="bill-right"><span class="bill-amount">'+amt+'</span></div></div>';
+      });
+      dashBills.innerHTML = html;
+      var bs = document.getElementById('bills-subtitle');
+      if(bs) bs.textContent = u.bills.length + ' bills tracked';
     }
+
+    // ── BILLS PANEL — full cards ──
+    var billsGrid = document.getElementById('bills-cards-grid');
+    if(billsGrid && u.bills && u.bills.length > 0) {
+      var billIcons2 = { 'electric':'⚡', 'energy':'⚡', 'internet':'📡', 'cable':'📡', 'mortgage':'🏠', 'rent':'🏠', 'insurance':'🚗', 'phone':'📱', 'water':'💧', 'school':'🎓', 'gym':'💪', 'streaming':'🎬' };
+      var bhtml = '';
+      u.bills.forEach(function(b) {
+        var iconKey = Object.keys(billIcons2).find(function(k){ return b.name.toLowerCase().includes(k); });
+        var icon = iconKey ? billIcons2[iconKey] : '💳';
+        var amt = b.amount ? '$' + parseFloat(b.amount).toFixed(2) : 'Amount not set';
+        bhtml += '<div class="bill-card">'+
+          '<div class="bill-card-top"><span class="bill-card-icon">'+icon+'</span><span class="badge badge-amber">Pending</span></div>'+
+          '<div class="bill-card-name">'+b.name+'</div>'+
+          '<div class="bill-card-cat">'+(b.provider||'Provider not set')+'</div>'+
+          '<div class="bill-card-amount">'+amt+'</div>'+
+          '<div class="bill-card-actions"><button class="btn btn-sm">Pay Now</button><button class="btn-ghost btn-sm">Auto-Pay</button></div>'+
+          '</div>';
+      });
+      billsGrid.innerHTML = bhtml;
+    }
+
+    // ── CALENDAR — show current week days ──
+    var days = ['cal-mon','cal-tue','cal-wed','cal-thu','cal-fri','cal-sat','cal-sun'];
+    var today = new Date();
+    var dayOfWeek = today.getDay();
+    var monday = new Date(today);
+    monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+    days.forEach(function(id, i) {
+      var d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      var el = document.getElementById(id);
+      if(el) el.textContent = d.getDate();
+    });
+
+    // ── AI AGENT PERSONALIZATION ──
+    if(typeof AGENTS !== 'undefined') {
+      var ctx = '';
+      if(u.familyName) ctx += 'Family: ' + u.familyName + '. ';
+      if(u.kids && u.kids.length > 0) ctx += 'Kids: ' + u.kids.map(function(k){return k.name+' age '+k.age;}).join(', ') + '. ';
+      if(u.city) ctx += 'City: ' + u.city + '. ';
+      if(u.bills && u.bills.length > 0) ctx += 'Bills: ' + u.bills.map(function(b){return b.name+(b.amount?' $'+b.amount:'')+(b.provider?' ('+b.provider+')':'');}).join(', ') + '. ';
+      if(u.integrations && u.integrations.length > 0) ctx += 'Wants to connect: ' + u.integrations.join(', ') + '. ';
+
+      AGENTS.general_agent.system = 'You are Steward, AI Chief of Staff for ' + (u.name||'a busy parent') + '. ' + ctx + 'Be warm, helpful, and action-oriented. Address the user by first name when natural.';
+      AGENTS.bills_agent.system = 'You are Steward Bill Manager for ' + (u.name||'a family') + '. ' + ctx + 'Help track and manage their bills. Be concise and decisive.';
+      AGENTS.bills_agent.welcome = u.bills && u.bills.length > 0 ?
+        'Hi ' + firstName + '! I can see you have **' + u.bills.length + ' bills** set up.\n\n' + u.bills.slice(0,3).map(function(b){return '• '+b.name+(b.amount?' — $'+b.amount:'');}).join('\n') + '\n\nWant me to help track due dates or set up reminders?' :
+        'Hi ' + firstName + '! I don\'t see any bills added yet.\n\nTell me about your bills and I\'ll help you track them — or just say something like "I pay $150 for electric each month" and I\'ll add it for you.';
+      AGENTS.schedule_agent.system = 'You are Steward Family Scheduler for ' + (u.name||'a family') + '. ' + ctx + 'Help coordinate the family calendar. Be warm and practical.';
+      AGENTS.supplies_agent.system = 'You are Steward Supply Orderer for ' + (u.name||'a family') + '. ' + ctx + 'Help order household supplies. Suggest Amazon, Target, or Costco.';
+      AGENTS.general_agent.welcome = 'Hi ' + firstName + '! I\'m Steward, your family\'s AI Chief of Staff.\n\nI\'m all set up with your info. Try asking me:\n\n' +
+        (u.bills && u.bills.length > 0 ? '• "Which of my bills is due soon?"\n' : '• "Help me add my bills"\n') +
+        (u.kids && u.kids.length > 0 ? '• "Plan an activity for ' + u.kids[0].name + '"\n' : '• "Help me organize my family schedule"\n') +
+        '• "Find the best deal on school supplies"\n• "Draft an email to my kid\'s teacher"\n\nWhat can I help with?';
+    }
+
+    // Mark bills task done if they have bills
+    if(u.bills && u.bills.length > 0) {
+      var bc = document.getElementById('task-bills-check');
+      if(bc) { bc.classList.add('done'); }
+      var bt = document.getElementById('task-bills-text');
+      if(bt) { bt.classList.add('done'); }
+    }
+
   } catch(e) { console.log('Personalization error:', e); }
 })();
+
+function addQuickTask() {
+  var text = prompt('What task do you want to add?');
+  if(!text) return;
+  var list = document.getElementById('tasks-week');
+  if(!list) return;
+  var div = document.createElement('div');
+  div.className = 'task-row';
+  div.innerHTML = '<div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">'+text+'</div><div class="task-meta">Added just now</div></div>';
+  list.appendChild(div);
+}
 </script>
 </body>
 </html>

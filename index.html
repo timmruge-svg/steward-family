@@ -237,8 +237,9 @@ body {
   <div class="nav-item" data-panel="tasks"><span class="nav-icon">✅</span>Tasks</div>
 
   <div class="sidebar-footer">
-    <div class="avatar">JS</div>
-    <div><div class="user-name">Jamie S.</div><div class="user-plan">Chief of Staff</div></div>
+    <div class="avatar" id="userAvatar">?</div>
+    <div><div class="user-name" id="userName">My Account</div><div class="user-plan" id="userPlan">Free Trial</div></div>
+    <a href="steward-signup.html" style="margin-left:auto;background:#38d9a9;color:#0f1117;border:none;border-radius:7px;padding:0.4rem 0.8rem;font-family:'Nunito',sans-serif;font-size:0.68rem;font-weight:800;cursor:pointer;text-decoration:none;white-space:nowrap">Get Started</a>
   </div>
 </nav>
 
@@ -498,7 +499,7 @@ async function searchDeal() {
   var r = document.getElementById('dealResults');
   r.innerHTML = '<div class="card" style="margin-bottom:1rem"><div class="card-body" style="font-size:.75rem;color:#6b7280;padding:1rem">Searching Amazon, Target, Walmart, Costco for "'+q+'"...</div></div>';
   try {
-    var res = await fetch('https://steward-proxy-production.up.railway.app/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:'Shopping agent: find best price for "'+q+'". Return ONLY a JSON array of 4 objects with keys: store, price (e.g. "$24.99"), note (max 8 words), savings (e.g. "Save $8" or null). No markdown, no text outside the array.'}]})});
+    var res = await fetch('https://steward-proxy-production.up.railway.app/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:800,messages:[{role:'user',content:'Shopping agent: find best price for "'+q+'". Return ONLY a JSON array of 4 objects with keys: store, price (e.g. "$24.99"), note (max 8 words), savings (e.g. "Save $8" or null). No markdown, no text outside the array.'}]})});
     var data = await res.json();
     var txt = (data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:'[]';
     txt = txt.replace(/```json|```/g,'').trim();
@@ -573,7 +574,7 @@ async function sendChat(){
   document.getElementById('chatSend').disabled=true;
   addTyping();
   try{
-    var res=await fetch('https://steward-proxy-production.up.railway.app/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:AGENTS[currentAgent].system,messages:chatHistory})});
+    var res=await fetch('https://steward-proxy-production.up.railway.app/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:AGENTS[currentAgent].system,messages:chatHistory})});
     var data=await res.json();
     var reply=(data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:'Something went wrong — please try again.';
     var t=document.getElementById('chatTyping');if(t)t.remove();
