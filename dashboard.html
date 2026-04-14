@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steward Family — AI Command Center for Parents</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #0f1117;
+  color: #e8eaf2;
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+#sidebar {
+  width: 230px;
+  min-width: 230px;
+  background: #181c27;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+.sidebar-top { padding: 1.2rem 1.2rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.logo-row { display: flex; align-items: center; gap: 10px; }
+.logo-text { font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 600; }
+.logo-text span { color: #38d9a9; }
+.logo-sub { font-size: 0.58rem; color: #6b7280; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+.nav-label { font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: #4b5563; padding: 1rem 1.2rem 0.3rem; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0.55rem 1.2rem; cursor: pointer; font-size: 0.8rem; font-weight: 600;
+  color: #6b7280; border-left: 3px solid transparent; transition: all 0.15s; user-select: none;
+}
+.nav-item:hover { background: rgba(255,255,255,0.03); color: #e8eaf2; }
+.nav-item.active { color: #38d9a9; background: rgba(56,217,169,0.08); border-left-color: #38d9a9; }
+.nav-icon { font-size: 0.95rem; width: 18px; text-align: center; flex-shrink: 0; }
+.nav-badge { margin-left: auto; background: #f87171; color: #fff; font-size: 0.58rem; padding: 1px 6px; border-radius: 20px; font-weight: 700; }
+.sidebar-footer { margin-top: auto; padding: 1rem 1.2rem; border-top: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 10px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg,#38d9a9,#60a5fa); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: #0f1117; flex-shrink: 0; }
+.user-name { font-size: 0.75rem; font-weight: 700; }
+.user-plan { font-size: 0.6rem; color: #38d9a9; letter-spacing: 0.08em; text-transform: uppercase; }
+#main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+#topbar { background: #181c27; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 0.9rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; position: sticky; top: 0; z-index: 10; }
+#topbar-title { font-family: 'Lora', serif; font-size: 1.1rem; font-weight: 600; }
+.status-pill { display: flex; align-items: center; gap: 6px; background: rgba(56,217,169,0.1); border: 1px solid rgba(56,217,169,0.2); padding: 4px 12px; border-radius: 20px; font-size: 0.62rem; color: #38d9a9; font-weight: 700; letter-spacing: 0.08em; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #38d9a9; animation: blink 2s ease infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+#content { padding: 1.5rem; flex: 1; min-width: 0; }
+.panel { display: none; }
+.panel.active { display: block; animation: popIn 0.25s ease; }
+@keyframes popIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+.stats-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { background: #181c27; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 1.1rem; }
+.stat-icon { font-size: 1.2rem; margin-bottom: 0.5rem; display: block; }
+.stat-val { font-family: 'Lora', serif; font-size: 1.6rem; font-weight: 600; line-height: 1; }
+.stat-lbl { font-size: 0.62rem; color: #6b7280; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+.stat-hint { font-size: 0.65rem; margin-top: 6px; }
+.green{color:#38d9a9} .amber{color:#fbbf24} .red{color:#f87171} .blue{color:#60a5fa}
+.card { background: #181c27; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; margin-bottom: 1rem; }
+.card-head { padding: 0.85rem 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: space-between; }
+.card-title { font-size: 0.8rem; font-weight: 700; }
+.card-action { font-size: 0.65rem; color: #38d9a9; cursor: pointer; font-weight: 700; }
+.card-action:hover { text-decoration: underline; }
+.card-body { padding: 1rem 1.2rem; }
+.two-col { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr); gap: 1rem; }
+.bill-row { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.77rem; gap: 0.5rem; }
+.bill-row:last-child { border-bottom: none; }
+.bill-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bill-icon { font-size: 1rem; flex-shrink: 0; }
+.bill-name { font-weight: 700; }
+.bill-due { font-size: 0.62rem; color: #6b7280; }
+.bill-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.bill-amount { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; }
+.badge { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+.badge-amber { background: rgba(251,191,36,0.1); color: #fbbf24; }
+.badge-green { background: rgba(56,217,169,0.1); color: #38d9a9; }
+.badge-red { background: rgba(248,113,113,0.1); color: #f87171; }
+.task-row { display: flex; align-items: flex-start; gap: 10px; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.77rem; }
+.task-row:last-child { border-bottom: none; }
+.task-check { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0; margin-top: 1px; cursor: pointer; transition: all 0.2s; }
+.task-check:hover { border-color: #38d9a9; }
+.task-check.done { background: #38d9a9; border-color: #38d9a9; }
+.task-text { font-weight: 600; line-height: 1.4; }
+.task-text.done { text-decoration: line-through; color: #4b5563; }
+.task-meta { font-size: 0.62rem; color: #6b7280; margin-top: 2px; }
+.btn { background: #38d9a9; color: #0f1117; border: none; border-radius: 7px; padding: 0.5rem 1.1rem; font-family: 'Nunito',sans-serif; font-size: 0.72rem; font-weight: 800; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.btn:hover { background: #2bc99b; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: #e8eaf2; border: 1px solid rgba(255,255,255,0.12); border-radius: 7px; padding: 0.5rem 1.1rem; font-family: 'Nunito',sans-serif; font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.btn-ghost:hover { border-color: #38d9a9; color: #38d9a9; }
+.btn-sm { padding: 0.3rem 0.65rem; font-size: 0.65rem; }
+.toolbar { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.2rem; gap: 1rem; flex-wrap: wrap; }
+.toolbar h2 { font-family: 'Lora',serif; font-size: 1.3rem; font-weight: 600; }
+.toolbar p { font-size: 0.7rem; color: #6b7280; margin-top: 3px; }
+.toolbar-btns { display: flex; gap: 8px; flex-shrink: 0; }
+.bill-cards-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 1rem; }
+.bill-card { background: #181c27; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 1.1rem; transition: border-color 0.2s,transform 0.15s; }
+.bill-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.15); }
+.bill-card.urgent { border-color: rgba(251,191,36,0.3); }
+.bill-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.6rem; }
+.bill-card-icon { font-size: 1.5rem; }
+.bill-card-name { font-size: 0.85rem; font-weight: 700; margin-top: 2px; }
+.bill-card-cat { font-size: 0.6rem; color: #6b7280; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1px; }
+.bill-card-amount { font-family: 'Lora',serif; font-size: 1.5rem; font-weight: 600; margin: 0.5rem 0 0.2rem; }
+.bill-card-due { font-size: 0.68rem; color: #6b7280; }
+.bill-card-due.soon { color: #fbbf24; font-weight: 700; }
+.bill-card-actions { display: flex; gap: 6px; margin-top: 0.9rem; }
+.agent-layout { display: grid; grid-template-columns: 200px minmax(0,1fr); gap: 1rem; }
+.agent-list { display: flex; flex-direction: column; gap: 6px; }
+.agent-btn { background: #181c27; border: 1px solid rgba(255,255,255,0.07); border-radius: 9px; padding: 0.8rem; cursor: pointer; text-align: left; transition: all 0.15s; }
+.agent-btn:hover { border-color: rgba(255,255,255,0.2); }
+.agent-btn.active { border-color: #38d9a9; background: rgba(56,217,169,0.07); }
+.agent-btn-icon { font-size: 1.1rem; margin-bottom: 4px; display: block; }
+.agent-btn-name { font-size: 0.75rem; font-weight: 700; }
+.agent-btn-desc { font-size: 0.6rem; color: #6b7280; margin-top: 2px; line-height: 1.3; }
+.chat-box { background: #181c27; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; display: flex; flex-direction: column; }
+.chat-head { padding: 0.9rem 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: space-between; }
+.chat-agent-name { font-size: 0.85rem; font-weight: 700; }
+.chat-agent-sub { font-size: 0.62rem; color: #6b7280; margin-top: 2px; }
+.chat-msgs { overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.9rem; height: 380px; }
+.chat-msg { display: flex; gap: 8px; align-items: flex-start; animation: popIn 0.25s ease; }
+.chat-avatar { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.62rem; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
+.chat-msg.ai .chat-avatar { background: linear-gradient(135deg,#38d9a9,#60a5fa); color: #0f1117; }
+.chat-msg.user .chat-avatar { background: rgba(255,255,255,0.08); color: #6b7280; border: 1px solid rgba(255,255,255,0.1); }
+.chat-bubble { background: #1e2332; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 0.65rem 0.9rem; font-size: 0.75rem; line-height: 1.7; max-width: 88%; }
+.chat-msg.user .chat-bubble { background: rgba(56,217,169,0.05); border-color: rgba(56,217,169,0.12); color: rgba(232,234,242,0.65); font-style: italic; }
+.chat-bubble strong { color: #38d9a9; font-weight: 700; }
+.typing-dots { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+.t-dot { width: 6px; height: 6px; border-radius: 50%; background: #38d9a9; opacity: 0.5; animation: bounce 1.2s ease infinite; }
+.t-dot:nth-child(2){animation-delay:0.15s} .t-dot:nth-child(3){animation-delay:0.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.chat-input-row { padding: 0.9rem 1.2rem; border-top: 1px solid rgba(255,255,255,0.07); display: flex; gap: 8px; }
+.chat-input { flex: 1; background: #1e2332; border: 1px solid rgba(255,255,255,0.1); border-radius: 7px; color: #e8eaf2; padding: 0.6rem 0.9rem; font-family: 'Nunito',sans-serif; font-size: 0.75rem; outline: none; transition: border-color 0.2s; }
+.chat-input::placeholder{color:#4b5563} .chat-input:focus{border-color:#38d9a9}
+.item-row { display: flex; align-items: center; gap: 10px; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.77rem; }
+.item-row:last-child{border-bottom:none}
+.item-name { font-weight: 600; flex: 1; }
+.item-qty { font-size: 0.65rem; }
+.deal-card { background: #181c27; border: 1px solid rgba(255,255,255,0.07); border-radius: 9px; padding: 0.9rem; display: flex; gap: 10px; transition: border-color 0.2s; }
+.deal-card:hover{border-color:#38d9a9}
+.deal-icon{font-size:1.3rem;flex-shrink:0}
+.deal-name{font-size:0.78rem;font-weight:700}
+.deal-store{font-size:0.63rem;color:#6b7280}
+.deal-price{font-family:'Lora',serif;font-size:1.1rem;font-weight:600;color:#38d9a9}
+.deal-was{font-size:0.63rem;color:#6b7280;text-decoration:line-through}
+.deal-save{font-size:0.6rem;background:rgba(56,217,169,0.1);color:#38d9a9;padding:1px 6px;border-radius:4px;font-weight:700;margin-left:4px}
+.deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0.8rem}
+.search-row{display:flex;gap:8px;margin-bottom:1.2rem}
+.search-input{flex:1;background:#181c27;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 1rem;font-family:'Nunito',sans-serif;font-size:0.78rem;outline:none;transition:border-color 0.2s}
+.search-input::placeholder{color:#4b5563} .search-input:focus{border-color:#38d9a9}
+.cal-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:1.2rem}
+.cal-day{background:#181c27;border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:0.6rem 0.4rem;text-align:center;cursor:pointer;transition:border-color 0.2s}
+.cal-day:hover{border-color:#38d9a9}
+.cal-day.today{border-color:#38d9a9;background:rgba(56,217,169,0.07)}
+.cal-day-name{font-size:0.58rem;color:#6b7280;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px}
+.cal-day-num{font-size:0.85rem;font-weight:700}
+.cal-dot{width:5px;height:5px;border-radius:50%;background:#fbbf24;margin:3px auto 0}
+.event-item{display:flex;align-items:flex-start;gap:10px;background:#181c27;border:1px solid rgba(255,255,255,0.07);border-radius:9px;border-left-width:3px;padding:0.8rem 1rem;margin-bottom:0.6rem;transition:transform 0.15s}
+.event-item:hover{transform:translateX(3px)}
+.event-item.school{border-left-color:#60a5fa}
+.event-item.medical{border-left-color:#f87171}
+.event-item.activity{border-left-color:#fbbf24}
+.event-item.family{border-left-color:#38d9a9}
+.event-icon{font-size:1rem;margin-top:1px;flex-shrink:0}
+.event-time{font-size:0.63rem;color:#6b7280;font-weight:700;min-width:58px;flex-shrink:0;padding-top:1px}
+.event-name{font-size:0.78rem;font-weight:700}
+.event-detail{font-size:0.63rem;color:#6b7280;margin-top:2px}
+.budget-bar-row{margin-bottom:1rem}
+.budget-bar-top{display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:5px}
+.budget-bar-label{font-weight:700}
+.budget-bar-nums{color:#6b7280}
+.budget-bar-track{height:6px;background:#1e2332;border-radius:3px}
+.budget-bar-fill{height:100%;border-radius:3px;transition:width 0.6s ease}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
+@media(max-width:860px){
+  #sidebar{display:none}
+  .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two-col{grid-template-columns:1fr}
+  .agent-layout{grid-template-columns:1fr}
+  .agent-list{flex-direction:row;flex-wrap:wrap}
+  .bill-cards-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="sidebar-top">
+    <div class="logo-row">
+      <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="19" cy="19" r="18" fill="#162820" stroke="#38d9a9" stroke-width="1.5"/>
+        <path d="M19 9 L30 17.5 L30 29 L8 29 L8 17.5 Z" fill="rgba(56,217,169,0.12)" stroke="#38d9a9" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M19 9 L30 17.5 L8 17.5 Z" fill="rgba(56,217,169,0.25)"/>
+        <path d="M16 29 L16 22 Q19 19 22 22 L22 29 Z" fill="rgba(56,217,169,0.7)"/>
+        <circle cx="15" cy="20" r="1.3" fill="#38d9a9"/>
+        <circle cx="23" cy="20" r="1.3" fill="#38d9a9"/>
+        <path d="M14.5 23 Q19 26.5 23.5 23" stroke="#38d9a9" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+        <path d="M19 1.5 A17.5 17.5 0 0 1 35 24" stroke="#38d9a9" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+        <circle cx="29.5" cy="8.5" r="1.6" fill="#fbbf24"/>
+        <line x1="29.5" y1="5.8" x2="29.5" y2="6.8" stroke="#fbbf24" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="29.5" y1="10.2" x2="29.5" y2="11.2" stroke="#fbbf24" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="26.8" y1="8.5" x2="27.8" y2="8.5" stroke="#fbbf24" stroke-width="1.1" stroke-linecap="round"/>
+        <line x1="31.2" y1="8.5" x2="32.2" y2="8.5" stroke="#fbbf24" stroke-width="1.1" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <div class="logo-text">Steward<span>.</span></div>
+        <div class="logo-sub">Family HQ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-label">Overview</div>
+  <div class="nav-item active" data-panel="dashboard"><span class="nav-icon">🏠</span>Dashboard</div>
+  <div class="nav-item" data-panel="agents"><span class="nav-icon">🤖</span>AI Agents<span class="nav-badge">5</span></div>
+
+  <div class="nav-label">Finances</div>
+  <div class="nav-item" data-panel="bills"><span class="nav-icon">💳</span>Bill Pay<span class="nav-badge">3</span></div>
+  <div class="nav-item" data-panel="budget"><span class="nav-icon">📊</span>Budget</div>
+
+  <div class="nav-label">Shopping</div>
+  <div class="nav-item" data-panel="supplies"><span class="nav-icon">📦</span>Supplies</div>
+  <div class="nav-item" data-panel="deals"><span class="nav-icon">🏷️</span>Deal Finder</div>
+
+  <div class="nav-label">Family</div>
+  <div class="nav-item" data-panel="schedule"><span class="nav-icon">📅</span>Schedule</div>
+  <div class="nav-item" data-panel="tasks"><span class="nav-icon">✅</span>Tasks</div>
+
+  <div class="sidebar-footer">
+    <div class="avatar">JS</div>
+    <div><div class="user-name">Jamie S.</div><div class="user-plan">Chief of Staff</div></div>
+  </div>
+</nav>
+
+<div id="main">
+  <div id="topbar">
+    <div id="topbar-title">Good morning, Jamie 👋</div>
+    <div class="status-pill"><div class="status-dot"></div>Agents Active</div>
+  </div>
+  <div id="content">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-icon">💳</span><div class="stat-val">$1,847</div><div class="stat-lbl">Bills Due</div><div class="stat-hint amber">3 need attention</div></div>
+        <div class="stat-card"><span class="stat-icon">📦</span><div class="stat-val">7</div><div class="stat-lbl">Low Supplies</div><div class="stat-hint red">Reorder suggested</div></div>
+        <div class="stat-card"><span class="stat-icon">🏷️</span><div class="stat-val">$213</div><div class="stat-lbl">Savings Found</div><div class="stat-hint green">↑ 18% this week</div></div>
+        <div class="stat-card"><span class="stat-icon">📅</span><div class="stat-val">5</div><div class="stat-lbl">Events This Week</div><div class="stat-hint blue">2 reminders set</div></div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head"><span class="card-title">📬 Upcoming Bills</span><span class="card-action" onclick="navTo('bills')">View all →</span></div>
+          <div class="card-body">
+            <div class="bill-row"><div class="bill-left"><span class="bill-icon">⚡</span><div><div class="bill-name">Electric — ConEd</div><div class="bill-due">Due in 3 days</div></div></div><div class="bill-right"><span class="bill-amount">$142</span><span class="badge badge-amber">Due Soon</span></div></div>
+            <div class="bill-row"><div class="bill-left"><span class="bill-icon">📡</span><div><div class="bill-name">Internet — Comcast</div><div class="bill-due">Due in 7 days</div></div></div><div class="bill-right"><span class="bill-amount">$89</span><span class="badge badge-amber">Due Soon</span></div></div>
+            <div class="bill-row"><div class="bill-left"><span class="bill-icon">🏠</span><div><div class="bill-name">Mortgage — Chase</div><div class="bill-due">Due in 12 days</div></div></div><div class="bill-right"><span class="bill-amount">$2,100</span><span class="badge badge-green">Auto-Pay</span></div></div>
+            <div class="bill-row"><div class="bill-left"><span class="bill-icon">🚗</span><div><div class="bill-name">Car Insurance</div><div class="bill-due">Due in 18 days</div></div></div><div class="bill-right"><span class="bill-amount">$187</span><span class="badge badge-green">Auto-Pay</span></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">✅ Family To-Do</span><span class="card-action">+ Add</span></div>
+          <div class="card-body">
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Order school supplies for Mia</div><div class="task-meta">Best deal found on Amazon</div></div></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Pay electric bill ($142)</div><div class="task-meta">Due April 12 — 3 days away</div></div></div>
+            <div class="task-row"><div class="task-check done" onclick="toggleTask(this)"></div><div><div class="task-text done">Schedule Leo's check-up</div><div class="task-meta">Done ✓ April 9 at 10:30am</div></div></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Compare car insurance quotes</div><div class="task-meta">3 cheaper options found</div></div></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Pack soccer snacks (your turn!)</div><div class="task-meta">Thursday 4pm · Riverside Park</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI AGENTS -->
+    <div class="panel" id="panel-agents">
+      <div class="agent-layout">
+        <div class="agent-list">
+          <div class="agent-btn active" data-agent="bills_agent"><span class="agent-btn-icon">💳</span><div class="agent-btn-name">Bill Manager</div><div class="agent-btn-desc">Track &amp; pay bills</div></div>
+          <div class="agent-btn" data-agent="supplies_agent"><span class="agent-btn-icon">📦</span><div class="agent-btn-name">Supply Orderer</div><div class="agent-btn-desc">Auto-reorder essentials</div></div>
+          <div class="agent-btn" data-agent="deals_agent"><span class="agent-btn-icon">🏷️</span><div class="agent-btn-name">Deal Finder</div><div class="agent-btn-desc">Best price on anything</div></div>
+          <div class="agent-btn" data-agent="schedule_agent"><span class="agent-btn-icon">📅</span><div class="agent-btn-name">Scheduler</div><div class="agent-btn-desc">Family calendar</div></div>
+          <div class="agent-btn" data-agent="general_agent"><span class="agent-btn-icon">🧠</span><div class="agent-btn-name">Ask Steward</div><div class="agent-btn-desc">Any parenting task</div></div>
+        </div>
+        <div class="chat-box">
+          <div class="chat-head">
+            <div><div class="chat-agent-name" id="agentName">💳 Bill Manager</div><div class="chat-agent-sub" id="agentDesc">Tracks bills, reminders, auto-pay</div></div>
+            <div class="status-pill"><div class="status-dot"></div>Live AI</div>
+          </div>
+          <div class="chat-msgs" id="chatMessages"></div>
+          <div class="chat-input-row">
+            <input class="chat-input" id="chatInput" placeholder="Ask your agent anything..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}">
+            <button class="btn" id="chatSend" onclick="sendChat()">Send ↑</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BILLS -->
+    <div class="panel" id="panel-bills">
+      <div class="toolbar"><div><h2>Bill Pay Dashboard</h2><p>3 bills need attention · $231 due in 7 days</p></div><div class="toolbar-btns"><button class="btn-ghost">+ Add Bill</button><button class="btn" onclick="navTo('agents')">🤖 Ask Agent</button></div></div>
+      <div class="bill-cards-grid">
+        <div class="bill-card urgent"><div class="bill-card-top"><span class="bill-card-icon">⚡</span><span class="badge badge-amber">Due in 3 days</span></div><div class="bill-card-name">Electric — ConEd</div><div class="bill-card-cat">Utilities</div><div class="bill-card-amount">$142.00</div><div class="bill-card-due soon">⚠ April 12, 2026</div><div class="bill-card-actions"><button class="btn btn-sm">Pay Now</button><button class="btn-ghost btn-sm">Auto-Pay</button></div></div>
+        <div class="bill-card urgent"><div class="bill-card-top"><span class="bill-card-icon">📡</span><span class="badge badge-amber">Due in 7 days</span></div><div class="bill-card-name">Internet — Comcast</div><div class="bill-card-cat">Utilities</div><div class="bill-card-amount">$89.00</div><div class="bill-card-due soon">April 16, 2026</div><div class="bill-card-actions"><button class="btn btn-sm">Pay Now</button><button class="btn-ghost btn-sm">Auto-Pay</button></div></div>
+        <div class="bill-card"><div class="bill-card-top"><span class="bill-card-icon">🏠</span><span class="badge badge-green">Auto-Pay On</span></div><div class="bill-card-name">Mortgage — Chase</div><div class="bill-card-cat">Housing</div><div class="bill-card-amount">$2,100.00</div><div class="bill-card-due">April 21, 2026</div><div class="bill-card-actions"><button class="btn-ghost btn-sm">Manage</button></div></div>
+        <div class="bill-card"><div class="bill-card-top"><span class="bill-card-icon">🚗</span><span class="badge badge-green">Auto-Pay On</span></div><div class="bill-card-name">Car Insurance — Geico</div><div class="bill-card-cat">Insurance</div><div class="bill-card-amount">$187.00</div><div class="bill-card-due">April 27, 2026</div><div class="bill-card-actions"><button class="btn-ghost btn-sm">Manage</button></div></div>
+        <div class="bill-card urgent"><div class="bill-card-top"><span class="bill-card-icon">🎓</span><span class="badge badge-amber">Due in 14 days</span></div><div class="bill-card-name">School Lunch Account</div><div class="bill-card-cat">Education</div><div class="bill-card-amount">$60.00</div><div class="bill-card-due">April 23, 2026</div><div class="bill-card-actions"><button class="btn btn-sm">Pay Now</button><button class="btn-ghost btn-sm">Auto-Pay</button></div></div>
+        <div class="bill-card"><div class="bill-card-top"><span class="bill-card-icon">📱</span><span class="badge badge-green">Auto-Pay On</span></div><div class="bill-card-name">Phone Plan — T-Mobile</div><div class="bill-card-cat">Telecom</div><div class="bill-card-amount">$110.00</div><div class="bill-card-due">April 30, 2026</div><div class="bill-card-actions"><button class="btn-ghost btn-sm">Manage</button></div></div>
+      </div>
+    </div>
+
+    <!-- SUPPLIES -->
+    <div class="panel" id="panel-supplies">
+      <div class="toolbar"><div><h2>Household Supplies</h2><p>5 items running low · Suggested reorder: $52</p></div><div class="toolbar-btns"><button class="btn-ghost">+ Add Item</button><button class="btn" onclick="navTo('agents')">🤖 Auto-Order</button></div></div>
+      <div class="two-col">
+        <div class="card"><div class="card-head"><span class="card-title">🔴 Low Stock — Order Now</span></div><div class="card-body">
+          <div class="item-row"><span style="font-size:1rem">🧴</span><span class="item-name">Dish Soap</span><span class="item-qty red">OUT</span></div>
+          <div class="item-row"><span style="font-size:1rem">🧻</span><span class="item-name">Paper Towels</span><span class="item-qty red">1 roll left</span></div>
+          <div class="item-row"><span style="font-size:1rem">🦷</span><span class="item-name">Kids Toothpaste</span><span class="item-qty amber">~3 days</span></div>
+          <div class="item-row"><span style="font-size:1rem">🛁</span><span class="item-name">Baby Shampoo</span><span class="item-qty amber">~1 week</span></div>
+          <div class="item-row"><span style="font-size:1rem">💊</span><span class="item-name">Children's Tylenol</span><span class="item-qty amber">4 doses</span></div>
+        </div></div>
+        <div class="card"><div class="card-head"><span class="card-title">✅ Well Stocked</span></div><div class="card-body">
+          <div class="item-row"><span style="font-size:1rem">🧼</span><span class="item-name">Hand Soap (×4)</span><span class="item-qty green">OK</span></div>
+          <div class="item-row"><span style="font-size:1rem">🍽️</span><span class="item-name">Dishwasher Pods</span><span class="item-qty green">38 left</span></div>
+          <div class="item-row"><span style="font-size:1rem">🧺</span><span class="item-name">Laundry Detergent</span><span class="item-qty green">~5 washes</span></div>
+          <div class="item-row"><span style="font-size:1rem">🍪</span><span class="item-name">Snack Bars (×24)</span><span class="item-qty green">2 boxes</span></div>
+          <div class="item-row"><span style="font-size:1rem">🥛</span><span class="item-name">Juice Boxes</span><span class="item-qty green">18 left</span></div>
+        </div></div>
+      </div>
+      <div class="card"><div class="card-head"><span class="card-title">🛒 Suggested Amazon Order — $52.14 total</span><button class="btn btn-sm">Order Now</button></div><div class="card-body"><div class="deals-grid">
+        <div class="deal-card"><span class="deal-icon">🧴</span><div><div class="deal-name">Dawn Dish Soap 3-pack</div><div class="deal-store">Amazon</div><div class="deal-price">$7.49</div></div></div>
+        <div class="deal-card"><span class="deal-icon">🧻</span><div><div class="deal-name">Bounty Paper Towels ×8</div><div class="deal-store">Costco</div><div class="deal-price">$18.99</div></div></div>
+        <div class="deal-card"><span class="deal-icon">🦷</span><div><div class="deal-name">Kids Toothpaste ×3</div><div class="deal-store">Target</div><div class="deal-price">$11.49</div></div></div>
+        <div class="deal-card"><span class="deal-icon">💊</span><div><div class="deal-name">Children's Tylenol ×2</div><div class="deal-store">Walgreens</div><div class="deal-price">$14.99</div></div></div>
+      </div></div></div>
+    </div>
+
+    <!-- DEALS -->
+    <div class="panel" id="panel-deals">
+      <div class="toolbar"><div><h2>AI Deal Finder</h2><p>Enter any item — Steward compares prices across all major stores</p></div></div>
+      <div class="search-row">
+        <input class="search-input" id="dealSearch" placeholder="e.g. Lego Technic, Nike kids sneakers, Instant Pot..." onkeydown="if(event.key==='Enter')searchDeal()">
+        <button class="btn" onclick="searchDeal()">🔍 Find Best Deal</button>
+      </div>
+      <div id="dealResults"></div>
+      <div class="card"><div class="card-head"><span class="card-title">🔥 Steward-Spotted Deals This Week</span></div><div class="card-body"><div class="deals-grid">
+        <div class="deal-card"><span class="deal-icon">🎒</span><div><div class="deal-name">JanSport Backpack</div><div class="deal-store">Target (online)</div><div><span class="deal-price">$24.99</span><span class="deal-was">$44.99</span><span class="deal-save">-44%</span></div></div></div>
+        <div class="deal-card"><span class="deal-icon">🖍️</span><div><div class="deal-name">Crayola 150pc Set</div><div class="deal-store">Amazon Prime</div><div><span class="deal-price">$12.49</span><span class="deal-was">$19.99</span><span class="deal-save">-38%</span></div></div></div>
+        <div class="deal-card"><span class="deal-icon">⚽</span><div><div class="deal-name">Wilson Soccer Ball Sz 4</div><div class="deal-store">Dick's Sporting Goods</div><div><span class="deal-price">$16.00</span><span class="deal-was">$28.00</span><span class="deal-save">-43%</span></div></div></div>
+        <div class="deal-card"><span class="deal-icon">📚</span><div><div class="deal-name">Magic Tree House 1–8</div><div class="deal-store">Amazon</div><div><span class="deal-price">$22.49</span><span class="deal-was">$39.92</span><span class="deal-save">-44%</span></div></div></div>
+      </div></div></div>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div class="panel" id="panel-schedule">
+      <div class="toolbar"><div><h2>Family Schedule</h2><p>Week of April 7–13, 2026</p></div><button class="btn-ghost">+ Add Event</button></div>
+      <div class="cal-week">
+        <div class="cal-day"><div class="cal-day-name">Mon</div><div class="cal-day-num">7</div></div>
+        <div class="cal-day"><div class="cal-day-name">Tue</div><div class="cal-day-num">8</div><div class="cal-dot"></div></div>
+        <div class="cal-day today"><div class="cal-day-name">Wed</div><div class="cal-day-num">9</div><div class="cal-dot"></div></div>
+        <div class="cal-day"><div class="cal-day-name">Thu</div><div class="cal-day-num">10</div><div class="cal-dot"></div></div>
+        <div class="cal-day"><div class="cal-day-name">Fri</div><div class="cal-day-num">11</div><div class="cal-dot"></div></div>
+        <div class="cal-day"><div class="cal-day-name">Sat</div><div class="cal-day-num">12</div></div>
+        <div class="cal-day"><div class="cal-day-name">Sun</div><div class="cal-day-num">13</div><div class="cal-dot"></div></div>
+      </div>
+      <div class="event-item school"><span class="event-icon">🎓</span><span class="event-time">8:00 AM</span><div><div class="event-name">Mia — School Science Fair</div><div class="event-detail">Westview Elementary · Bring tri-fold board</div></div></div>
+      <div class="event-item medical"><span class="event-icon">🏥</span><span class="event-time">10:30 AM</span><div><div class="event-name">Leo — Pediatric Check-up</div><div class="event-detail">Dr. Patel · 45 Oak St · Bring insurance card</div></div></div>
+      <div class="event-item activity"><span class="event-icon">⚽</span><span class="event-time">4:00 PM</span><div><div class="event-name">Mia — Soccer Practice</div><div class="event-detail">Riverside Park, Field 3 · Bring snacks (your turn)</div></div></div>
+      <div class="event-item family"><span class="event-icon">🛒</span><span class="event-time">6:30 PM</span><div><div class="event-name">Costco Run</div><div class="event-detail">Steward prepared shopping list · Est. $112</div></div></div>
+      <div class="event-item school"><span class="event-icon">🎨</span><span class="event-time">Fri 2:00 PM</span><div><div class="event-name">Leo — Art Class Recital</div><div class="event-detail">Room 14B · Parents welcome</div></div></div>
+      <div class="event-item family"><span class="event-icon">🍕</span><span class="event-time">Sun 6:00 PM</span><div><div class="event-name">Family Dinner — Grandma's</div><div class="event-detail">Bring dessert · Steward ordered bakery cake</div></div></div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="panel" id="panel-tasks">
+      <div class="toolbar"><div><h2>Family Tasks</h2><p>4 open · 1 completed today</p></div><button class="btn">+ Add Task</button></div>
+      <div class="two-col">
+        <div class="card"><div class="card-head"><span class="card-title">🔴 This Week</span></div><div class="card-body">
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Order school supplies for Mia</div><div class="task-meta">Steward found best deal on Amazon</div></div></div>
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Pay electric bill ($142)</div><div class="task-meta">Due April 12</div></div></div>
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Pack soccer snacks for Thursday</div><div class="task-meta">It's your turn for team snacks</div></div></div>
+          <div class="task-row"><div class="task-check done" onclick="toggleTask(this)"></div><div><div class="task-text done">Schedule Leo's check-up</div><div class="task-meta">Done ✓ April 9 at 10:30am</div></div></div>
+        </div></div>
+        <div class="card"><div class="card-head"><span class="card-title">📋 Upcoming</span></div><div class="card-body">
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Compare car insurance quotes</div><div class="task-meta">Renewal May 1 · 3 cheaper options found</div></div></div>
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Register kids for summer camp</div><div class="task-meta">Deadline May 15 · 4 camps shortlisted</div></div></div>
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Refill prescription — Mia</div><div class="task-meta">Estimated: end of month</div></div></div>
+          <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Plan Leo's birthday party</div><div class="task-meta">May 22 · 6 weeks away</div></div></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- BUDGET -->
+    <div class="panel" id="panel-budget">
+      <div class="toolbar"><div><h2>Monthly Budget — April 2026</h2><p>On track · $1,353 remaining</p></div></div>
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-icon">💰</span><div class="stat-val">$6,200</div><div class="stat-lbl">Monthly Income</div></div>
+        <div class="stat-card"><span class="stat-icon">📤</span><div class="stat-val">$4,847</div><div class="stat-lbl">Total Budgeted</div></div>
+        <div class="stat-card"><span class="stat-icon">💸</span><div class="stat-val">$2,931</div><div class="stat-lbl">Spent So Far</div></div>
+        <div class="stat-card"><span class="stat-icon">🏦</span><div class="stat-val">$1,353</div><div class="stat-lbl">Remaining</div></div>
+      </div>
+      <div class="card"><div class="card-head"><span class="card-title">📊 Category Breakdown</span></div><div class="card-body" id="budgetBars"></div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var BUDGET = [
+  {label:'Housing',spent:2100,total:2100},
+  {label:'Groceries',spent:380,total:600},
+  {label:'Utilities',spent:231,total:350},
+  {label:'Kids Activities',spent:220,total:300},
+  {label:'Insurance',spent:187,total:187},
+  {label:'Entertainment',spent:80,total:200},
+  {label:'Savings',spent:600,total:600}
+];
+
+var AGENTS = {
+  bills_agent:{
+    name:'💳 Bill Manager',desc:'Tracks bills, reminders, auto-pay',
+    system:'You are Steward\'s Bill Manager for a busy family. Current bills: Electric (ConEd) $142 due Apr 12, Internet (Comcast) $89 due Apr 16, Mortgage $2100 Apr 21 auto-pay, Car Insurance $187 Apr 27 auto-pay, School Lunch $60 Apr 23, Phone $110 Apr 30 auto-pay. Be concise and decisive.',
+    welcome:'Hi! Tracking **6 bills** totaling **$2,728** this month.\n\nUrgent:\n\n• ⚡ ConEd $142 — due in **3 days**\n• 📡 Comcast $89 — due in 7 days\n• 🎓 School Lunch $60 — due April 23\n\nWant to set up auto-pay or get a full breakdown?'
+  },
+  supplies_agent:{
+    name:'📦 Supply Orderer',desc:'Monitors stock, auto-orders essentials',
+    system:'You are Steward\'s Supply Orderer for a family with Mia (8) and Leo (5). Low: Dish Soap out, Paper Towels 1 roll, Kids Toothpaste ~3 days, Baby Shampoo ~1 week, Tylenol 4 doses. Suggest Amazon bundles or Costco runs. Be practical.',
+    welcome:'Inventory scan complete! **5 items need reordering:**\n\n• 🧴 Dish Soap — completely out\n• 🧻 Paper Towels — 1 roll left\n• 🦷 Kids Toothpaste — ~3 days left\n• 🛁 Baby Shampoo — ~1 week left\n• 💊 Children\'s Tylenol — running low\n\nI can build an Amazon order for ~**$52**. Shall I?'
+  },
+  deals_agent:{
+    name:'🏷️ Deal Finder',desc:'Best price on anything',
+    system:'You are a deal-finding agent for a busy parent. Compare prices across Amazon, Target, Walmart, Costco. Be specific with prices and mention cashback via Rakuten when relevant. Be direct.',
+    welcome:'Ready to find deals! I compare **Amazon, Target, Walmart, Costco** and more.\n\nTop finds this week:\n• 🎒 JanSport backpack — **$24.99** at Target\n• 🖍️ Crayola 150pc — **$12.49** on Amazon\n• ⚽ Soccer ball — **$16** at Dick\'s\n\nWhat are you looking for?'
+  },
+  schedule_agent:{
+    name:'📅 Scheduler',desc:'Family calendar and reminders',
+    system:'You are Steward\'s Family Scheduler. Kids: Mia (8, soccer) and Leo (5, art). This week: Leo check-up Wed 10:30am, soccer practice Thu 4pm, Leo art recital Fri 2pm, family dinner Sun. Be warm and practical.',
+    welcome:'Here\'s the week 📅\n\n**Today (Wed April 9):**\n• 🏥 10:30am — Leo\'s check-up\n• ⚽ 4:00pm — Mia\'s soccer practice\n\n**Coming up:**\n• 🎨 Fri 2pm — Leo\'s art recital\n• 🍕 Sun 6pm — Dinner at Grandma\'s\n\n⚠️ Your turn for soccer snacks Thursday!'
+  },
+  general_agent:{
+    name:'🧠 Ask Steward',desc:'Any parenting or household task',
+    system:'You are Steward, AI Chief of Staff for busy parents with Mia (8) and Leo (5). Help with bills, supplies, deals, schedules, emails to schools, planning activities. Be warm and action-oriented.',
+    welcome:'Hi! I\'m Steward — your family\'s AI Chief of Staff 🏠\n\nTry asking:\n\n• "What bills are due this week?"\n• "We\'re out of dish soap"\n• "Find the best deal on a lunch box"\n• "Draft an email to Mia\'s teacher"\n\nHow can I help?'
+  }
+};
+
+var currentAgent = 'bills_agent';
+var chatHistory = [];
+var chatLoading = false;
+
+function navTo(id) {
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  var p = document.getElementById('panel-'+id);
+  if(p) p.classList.add('active');
+  var n = document.querySelector('[data-panel="'+id+'"]');
+  if(n) n.classList.add('active');
+  var T={dashboard:'Good morning, Jamie 👋',agents:'AI Agents',bills:'Bill Pay Dashboard',supplies:'Household Supplies',deals:'AI Deal Finder',schedule:'Family Schedule',tasks:'Family Tasks',budget:'Monthly Budget'};
+  document.getElementById('topbar-title').textContent = T[id]||'';
+  if(id==='agents') initChat();
+  if(id==='budget') renderBudget();
+}
+
+document.querySelectorAll('.nav-item').forEach(function(el){
+  el.addEventListener('click',function(){navTo(el.dataset.panel);});
+});
+
+function toggleTask(el) {
+  el.classList.toggle('done');
+  var t = el.parentElement.querySelector('.task-text');
+  if(t) t.classList.toggle('done');
+}
+
+function renderBudget() {
+  var c = document.getElementById('budgetBars');
+  if(!c) return;
+  var h = '';
+  for(var i=0;i<BUDGET.length;i++){
+    var b=BUDGET[i], pct=Math.round(b.spent/b.total*100);
+    var col = pct>=90?'#f87171':pct>=70?'#fbbf24':'#38d9a9';
+    h += '<div class="budget-bar-row"><div class="budget-bar-top"><span class="budget-bar-label">'+b.label+'</span><span class="budget-bar-nums">$'+b.spent.toLocaleString()+' / $'+b.total.toLocaleString()+'</span></div><div class="budget-bar-track"><div class="budget-bar-fill" style="width:'+pct+'%;background:'+col+'"></div></div></div>';
+  }
+  c.innerHTML = h;
+}
+
+async function searchDeal() {
+  var q = document.getElementById('dealSearch').value.trim();
+  if(!q) return;
+  var r = document.getElementById('dealResults');
+  r.innerHTML = '<div class="card" style="margin-bottom:1rem"><div class="card-body" style="font-size:.75rem;color:#6b7280;padding:1rem">Searching Amazon, Target, Walmart, Costco for "'+q+'"...</div></div>';
+  try {
+    var res = await fetch('https://steward-proxy-production.up.railway.app/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:800,messages:[{role:'user',content:'Shopping agent: find best price for "'+q+'". Return ONLY a JSON array of 4 objects with keys: store, price (e.g. "$24.99"), note (max 8 words), savings (e.g. "Save $8" or null). No markdown, no text outside the array.'}]})});
+    var data = await res.json();
+    var txt = (data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:'[]';
+    txt = txt.replace(/```json|```/g,'').trim();
+    var deals = JSON.parse(txt);
+    var icons={Amazon:'📦',Target:'🎯',Walmart:'🛒',Costco:'🏪'};
+    var h='<div class="card" style="margin-bottom:1rem"><div class="card-head"><span class="card-title">Best prices for &quot;'+q+'&quot;</span></div><div class="card-body"><div class="deals-grid">';
+    for(var i=0;i<deals.length;i++){
+      var d=deals[i];
+      h+='<div class="deal-card"'+(i===0?' style="border-color:#38d9a9"':'')+'>'+
+        '<span class="deal-icon">'+(icons[d.store]||'🛍️')+'</span><div>'+
+        (i===0?'<div style="font-size:.58rem;color:#38d9a9;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Best Deal</div>':'')+
+        '<div class="deal-name">'+d.store+'</div>'+
+        '<div class="deal-store">'+d.note+'</div>'+
+        '<div><span class="deal-price">'+d.price+'</span>'+(d.savings?'<span class="deal-save">'+d.savings+'</span>':'')+
+        '</div><button class="btn btn-sm" style="margin-top:6px">View</button></div></div>';
+    }
+    h+='</div></div></div>';
+    r.innerHTML = h;
+  } catch(e) {
+    r.innerHTML='<div class="card" style="margin-bottom:1rem"><div class="card-body" style="font-size:.75rem;color:#6b7280">Could not fetch results. Try again.</div></div>';
+  }
+}
+
+document.querySelectorAll('.agent-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.agent-btn').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    currentAgent = btn.dataset.agent;
+    chatHistory = [];
+    var cfg = AGENTS[currentAgent];
+    document.getElementById('agentName').textContent = cfg.name;
+    document.getElementById('agentDesc').textContent = cfg.desc;
+    renderWelcome();
+  });
+});
+
+function initChat(){renderWelcome();}
+
+function renderWelcome(){
+  var m=document.getElementById('chatMessages');
+  m.innerHTML='';
+  addMsg('ai',AGENTS[currentAgent].welcome);
+}
+
+function addMsg(role,text){
+  var m=document.getElementById('chatMessages');
+  var d=document.createElement('div');
+  d.className='chat-msg '+role;
+  var f=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+  d.innerHTML='<div class="chat-avatar">'+(role==='ai'?'S':'Me')+'</div><div class="chat-bubble">'+f+'</div>';
+  m.appendChild(d);
+  m.scrollTop=m.scrollHeight;
+}
+
+function addTyping(){
+  var m=document.getElementById('chatMessages');
+  var d=document.createElement('div');
+  d.className='chat-msg ai';d.id='chatTyping';
+  d.innerHTML='<div class="chat-avatar">S</div><div class="chat-bubble"><div class="typing-dots"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div></div>';
+  m.appendChild(d);m.scrollTop=m.scrollHeight;
+}
+
+async function sendChat(){
+  if(chatLoading)return;
+  var inp=document.getElementById('chatInput');
+  var txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';
+  addMsg('user',txt);
+  chatHistory.push({role:'user',content:txt});
+  chatLoading=true;
+  document.getElementById('chatSend').disabled=true;
+  addTyping();
+  try{
+    var res=await fetch('https://steward-proxy-production.up.railway.app/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:AGENTS[currentAgent].system,messages:chatHistory})});
+    var data=await res.json();
+    var reply=(data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:'Something went wrong — please try again.';
+    var t=document.getElementById('chatTyping');if(t)t.remove();
+    chatHistory.push({role:'assistant',content:reply});
+    addMsg('ai',reply);
+  }catch(e){
+    var t=document.getElementById('chatTyping');if(t)t.remove();
+    addMsg('ai','Connection issue. Please try again.');
+  }
+  chatLoading=false;
+  document.getElementById('chatSend').disabled=false;
+}
+
+renderBudget();
+initChat();
+
+// PERSONALIZATION - reads user data from signup
+(function() {
+  var raw = localStorage.getItem('stewardUser');
+  if(!raw) return;
+  try {
+    var u = JSON.parse(raw);
+    var firstName = u.name ? u.name.split(' ')[0] : 'there';
+    var hour = new Date().getHours();
+    var greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+    // Greeting
+    var t = document.getElementById('topbar-title');
+    if(t) t.textContent = greeting + ', ' + firstName + ' ';
+
+    // Sidebar name + plan
+    var un = document.querySelector('.user-name');
+    if(un) un.textContent = u.name || 'My Account';
+    var up = document.querySelector('.user-plan');
+    if(up && u.plan) up.textContent = u.plan.charAt(0).toUpperCase() + u.plan.slice(1) + ' Plan';
+
+    // Avatar initials
+    var av = document.querySelector('.avatar');
+    if(av && u.name) {
+      var parts = u.name.split(' ');
+      av.textContent = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+    }
+
+    // Personalize AI agents with real user data
+    if(typeof AGENTS !== 'undefined') {
+      var ctx = 'Family: ' + (u.familyName || 'this family') + '. ';
+      if(u.kids && u.kids.length > 0) {
+        ctx += 'Kids: ' + u.kids.map(function(k){ return k.name + ' age ' + k.age; }).join(', ') + '. ';
+      }
+      if(u.city) ctx += 'City: ' + u.city + '. ';
+      if(u.bills && u.bills.length > 0) {
+        ctx += 'Their bills: ' + u.bills.map(function(b){ return b.name + (b.amount ? ' $' + b.amount : '') + (b.provider ? ' (' + b.provider + ')' : ''); }).join(', ') + '. ';
+      }
+      AGENTS.general_agent.system = 'You are Steward, AI Chief of Staff for a busy parent. ' + ctx + 'Be warm, helpful, and action-oriented.';
+      AGENTS.bills_agent.system = 'You are Steward Bill Manager. ' + ctx + 'Help track and manage their specific bills. Be concise and decisive.';
+      AGENTS.schedule_agent.system = 'You are Steward Family Scheduler. ' + ctx + 'Help coordinate the family calendar. Be warm and practical.';
+      AGENTS.supplies_agent.system = 'You are Steward Supply Orderer. ' + ctx + 'Help order household supplies efficiently. Suggest Amazon, Target, or Costco.';
+    }
+  } catch(e) { console.log('Personalization error:', e); }
+})();
+</script>
+</body>
+</html>
