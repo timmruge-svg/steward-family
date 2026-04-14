@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steward — Get Started</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Nunito',sans-serif;background:#0f1117;color:#e8eaf2;min-height:100vh;display:flex;flex-direction:column}
+
+/* ── TOP NAV ── */
+.topnav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 2rem;border-bottom:1px solid rgba(255,255,255,0.07);background:#181c27;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-text{font-family:'Lora',serif;font-size:1.2rem;font-weight:600;color:#e8eaf2}
+.logo-text span{color:#38d9a9}
+.logo-sub{font-size:0.58rem;color:#6b7280;letter-spacing:0.12em;text-transform:uppercase;margin-top:2px}
+.nav-link{font-size:0.75rem;color:#6b7280;text-decoration:none;font-weight:600}
+.nav-link:hover{color:#38d9a9}
+
+/* ── MAIN WRAPPER ── */
+.main{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+
+/* ── CARD ── */
+.card{background:#181c27;border:1px solid rgba(255,255,255,0.07);border-radius:16px;width:100%;max-width:520px;overflow:hidden}
+.card-top{padding:2rem 2rem 0}
+.card-body{padding:1.5rem 2rem 2rem}
+
+/* ── STEPS ── */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:2rem}
+.step{display:flex;align-items:center;gap:6px;font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4b5563}
+.step.active{color:#38d9a9}
+.step.done{color:#38d9a9;opacity:0.5}
+.step-num{width:22px;height:22px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:800;flex-shrink:0}
+.step.done .step-num{background:#38d9a9;border-color:#38d9a9;color:#0f1117}
+.step.done .step-num::after{content:'✓'}
+.step.done .step-label{display:none}
+.step-divider{flex:1;height:1px;background:rgba(255,255,255,0.07);margin:0 8px}
+
+/* ── HEADINGS ── */
+.screen-title{font-family:'Lora',serif;font-size:1.6rem;font-weight:600;margin-bottom:0.4rem;line-height:1.2}
+.screen-sub{font-size:0.75rem;color:#6b7280;margin-bottom:1.5rem;line-height:1.6}
+
+/* ── FORM ELEMENTS ── */
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:0.7rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px}
+.field input,.field select{width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#e8eaf2;padding:0.7rem 1rem;font-family:'Nunito',sans-serif;font-size:0.82rem;outline:none;transition:border-color 0.2s}
+.field input::placeholder{color:#4b5563}
+.field input:focus,.field select:focus{border-color:#38d9a9}
+.field select{appearance:none;cursor:pointer}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
+.field-hint{font-size:0.65rem;color:#6b7280;margin-top:4px}
+
+/* ── KIDS ── */
+.kids-list{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:0.8rem}
+.kid-row{display:grid;grid-template-columns:1fr 80px 32px;gap:0.5rem;align-items:center}
+.kid-row input{background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.6rem 0.8rem;font-family:'Nunito',sans-serif;font-size:0.78rem;outline:none;transition:border-color 0.2s;width:100%}
+.kid-row input:focus{border-color:#38d9a9}
+.kid-remove{width:32px;height:32px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);border-radius:6px;color:#f87171;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:all 0.2s;flex-shrink:0}
+.kid-remove:hover{background:rgba(248,113,113,0.2)}
+.add-btn{background:transparent;border:1px dashed rgba(255,255,255,0.15);border-radius:7px;color:#6b7280;padding:0.55rem 1rem;font-family:'Nunito',sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%}
+.add-btn:hover{border-color:#38d9a9;color:#38d9a9}
+
+/* ── BILLS ── */
+.bills-list{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:0.8rem}
+.bill-row-input{display:grid;grid-template-columns:1fr 1fr 90px 32px;gap:0.5rem;align-items:center}
+.bill-row-input input,.bill-row-input select{background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.6rem 0.8rem;font-family:'Nunito',sans-serif;font-size:0.75rem;outline:none;transition:border-color 0.2s;width:100%}
+.bill-row-input input:focus,.bill-row-input select:focus{border-color:#38d9a9}
+.bill-row-input select{appearance:none}
+
+/* ── INTEGRATIONS ── */
+.integrations-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:1rem}
+.int-card{background:#1e2332;border:1px solid rgba(255,255,255,0.07);border-radius:9px;padding:0.8rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.int-card:hover{border-color:rgba(255,255,255,0.2)}
+.int-card.selected{border-color:#38d9a9;background:rgba(56,217,169,0.07)}
+.int-card-icon{font-size:1.4rem;margin-bottom:0.3rem;display:block}
+.int-card-name{font-size:0.68rem;font-weight:700;line-height:1.2}
+.int-card-check{position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;background:#38d9a9;display:none;align-items:center;justify-content:center;font-size:0.55rem;color:#0f1117;font-weight:800}
+.int-card.selected .int-card-check{display:flex}
+.custom-int{display:flex;gap:0.5rem;margin-top:0.5rem}
+.custom-int input{flex:1;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.6rem 0.8rem;font-family:'Nunito',sans-serif;font-size:0.75rem;outline:none;transition:border-color 0.2s}
+.custom-int input:focus{border-color:#38d9a9}
+.custom-int input::placeholder{color:#4b5563}
+
+/* ── BUTTONS ── */
+.btn-row{display:flex;gap:0.7rem;margin-top:1.5rem}
+.btn{background:#38d9a9;color:#0f1117;border:none;border-radius:8px;padding:0.75rem 1.5rem;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:800;cursor:pointer;transition:all 0.2s;flex:1}
+.btn:hover{background:#2bc99b;transform:translateY(-1px)}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.btn-ghost{background:transparent;color:#6b7280;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.75rem 1.5rem;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+.btn-ghost:hover{border-color:#38d9a9;color:#38d9a9}
+
+/* ── PROMO ── */
+.promo-row{display:flex;gap:0.5rem;margin-top:0.8rem}
+.promo-input{flex:1;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.6rem 0.8rem;font-family:'Nunito',sans-serif;font-size:0.75rem;outline:none;transition:border-color 0.2s}
+.promo-input:focus{border-color:#38d9a9}
+.promo-input::placeholder{color:#4b5563}
+.promo-apply{background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#6b7280;padding:0.6rem 1rem;font-family:'Nunito',sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.promo-apply:hover{border-color:#38d9a9;color:#38d9a9}
+.promo-msg{font-size:0.68rem;margin-top:4px;font-weight:700}
+.promo-msg.success{color:#38d9a9}
+.promo-msg.error{color:#f87171}
+
+/* ── PLAN CARDS ── */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem;margin-bottom:1rem}
+.plan-card{background:#1e2332;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:1rem;cursor:pointer;transition:all 0.2s;position:relative}
+.plan-card:hover{border-color:rgba(255,255,255,0.2)}
+.plan-card.selected{border-color:#38d9a9;background:rgba(56,217,169,0.07)}
+.plan-card.popular{border-color:rgba(251,191,36,0.3)}
+.plan-popular{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#fbbf24;color:#0f1117;font-size:0.55rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;border-radius:0 0 6px 6px;white-space:nowrap}
+.plan-name{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#6b7280;margin-bottom:0.4rem}
+.plan-card.selected .plan-name{color:#38d9a9}
+.plan-price{font-family:'Lora',serif;font-size:1.5rem;font-weight:600;line-height:1}
+.plan-period{font-size:0.6rem;color:#6b7280;margin-bottom:0.7rem}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:0.3rem}
+.plan-features li{font-size:0.62rem;color:#6b7280;display:flex;gap:5px;line-height:1.3}
+.plan-features li::before{content:'✓';color:#38d9a9;font-weight:800;flex-shrink:0}
+.plan-card.selected .plan-features li{color:#9ca3af}
+
+/* ── SUCCESS ── */
+.success-screen{text-align:center;padding:1rem 0}
+.success-icon{font-size:3.5rem;margin-bottom:1rem;display:block;animation:popIn 0.5s ease}
+.success-title{font-family:'Lora',serif;font-size:1.8rem;font-weight:600;margin-bottom:0.5rem}
+.success-sub{font-size:0.78rem;color:#6b7280;line-height:1.7;margin-bottom:1.5rem}
+.success-details{background:#1e2332;border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:1rem;text-align:left;margin-bottom:1.5rem}
+.success-detail-row{display:flex;justify-content:space-between;font-size:0.75rem;padding:0.4rem 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.success-detail-row:last-child{border-bottom:none}
+.success-detail-label{color:#6b7280;font-weight:600}
+.success-detail-val{color:#38d9a9;font-weight:700}
+
+/* ── ERROR ── */
+.field-error{font-size:0.65rem;color:#f87171;margin-top:4px;font-weight:700}
+
+/* ── ANIMATIONS ── */
+@keyframes popIn{from{opacity:0;transform:translateY(10px) scale(0.95)}to{opacity:1;transform:none}}
+.screen{animation:popIn 0.25s ease}
+
+@media(max-width:500px){
+  .card-top,.card-body{padding:1.2rem}
+  .plans-grid{grid-template-columns:1fr}
+  .integrations-grid{grid-template-columns:repeat(2,1fr)}
+  .bill-row-input{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
+  .field-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="index.html" class="logo">
+    <svg width="32" height="32" viewBox="0 0 38 38" fill="none">
+      <circle cx="19" cy="19" r="18" fill="#162820" stroke="#38d9a9" stroke-width="1.5"/>
+      <path d="M19 9 L30 17.5 L30 29 L8 29 L8 17.5 Z" fill="rgba(56,217,169,0.12)" stroke="#38d9a9" stroke-width="1.2" stroke-linejoin="round"/>
+      <path d="M19 9 L30 17.5 L8 17.5 Z" fill="rgba(56,217,169,0.25)"/>
+      <path d="M16 29 L16 22 Q19 19 22 22 L22 29 Z" fill="rgba(56,217,169,0.7)"/>
+      <circle cx="15" cy="20" r="1.3" fill="#38d9a9"/>
+      <circle cx="23" cy="20" r="1.3" fill="#38d9a9"/>
+      <path d="M14.5 23 Q19 26.5 23.5 23" stroke="#38d9a9" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+    </svg>
+    <div>
+      <div class="logo-text">Steward<span>.</span></div>
+      <div class="logo-sub">Family HQ</div>
+    </div>
+  </a>
+  <a href="index.html" class="nav-link">← Back to home</a>
+</nav>
+
+<div class="main">
+  <div class="card">
+    <div class="card-top">
+      <!-- STEP INDICATORS -->
+      <div class="steps" id="stepsBar">
+        <div class="step active" id="step-ind-1"><div class="step-num">1</div><span class="step-label">Account</span></div>
+        <div class="step-divider"></div>
+        <div class="step" id="step-ind-2"><div class="step-num">2</div><span class="step-label">Family</span></div>
+        <div class="step-divider"></div>
+        <div class="step" id="step-ind-3"><div class="step-num">3</div><span class="step-label">Bills</span></div>
+        <div class="step-divider"></div>
+        <div class="step" id="step-ind-4"><div class="step-num">4</div><span class="step-label">Plan</span></div>
+      </div>
+    </div>
+
+    <div class="card-body">
+
+      <!-- ══ SCREEN 1: ACCOUNT ══ -->
+      <div id="screen-1" class="screen">
+        <div class="screen-title">Create your account</div>
+        <div class="screen-sub">Your family's AI Chief of Staff is ready. Let's get you set up.</div>
+
+        <div class="field">
+          <label>Your Name</label>
+          <input type="text" id="s1-name" placeholder="Jamie Smith">
+          <div class="field-error" id="err-name"></div>
+        </div>
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" id="s1-email" placeholder="jamie@gmail.com">
+          <div class="field-error" id="err-email"></div>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="s1-password" placeholder="At least 8 characters">
+          <div class="field-hint">Min 8 characters</div>
+          <div class="field-error" id="err-password"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn" onclick="goStep2()">Continue →</button>
+        </div>
+
+        <div style="text-align:center;margin-top:1rem;font-size:0.7rem;color:#4b5563">
+          Already have an account? <a href="#" style="color:#38d9a9;font-weight:700">Sign in</a>
+        </div>
+      </div>
+
+      <!-- ══ SCREEN 2: FAMILY ══ -->
+      <div id="screen-2" class="screen" style="display:none">
+        <div class="screen-title">Tell us about your family</div>
+        <div class="screen-sub">Steward uses this to personalize your dashboard and agents.</div>
+
+        <div class="field">
+          <label>Family Name</label>
+          <input type="text" id="s2-family" placeholder="The Smith Family">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>Your City</label>
+            <input type="text" id="s2-city" placeholder="Mason, OH">
+          </div>
+          <div class="field">
+            <label>Household Size</label>
+            <select id="s2-size">
+              <option value="2">2 people</option>
+              <option value="3">3 people</option>
+              <option value="4" selected>4 people</option>
+              <option value="5">5 people</option>
+              <option value="6+">6+ people</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Kids (optional)</label>
+          <div class="kids-list" id="kidsList"></div>
+          <button class="add-btn" onclick="addKid()">+ Add a child</button>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-ghost" onclick="showScreen(1)">← Back</button>
+          <button class="btn" onclick="goStep3()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- ══ SCREEN 3: BILLS + INTEGRATIONS ══ -->
+      <div id="screen-3" class="screen" style="display:none">
+        <div class="screen-title">What bills do you pay?</div>
+        <div class="screen-sub">Add your recurring bills and select providers you'd like to connect. You can always add more later.</div>
+
+        <div class="bills-list" id="billsList"></div>
+        <button class="add-btn" onclick="addBill()" style="margin-bottom:1.2rem">+ Add a bill</button>
+
+        <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.7rem">Connect Providers (optional)</div>
+        <div class="integrations-grid" id="intGrid">
+          <div class="int-card" onclick="toggleInt(this,'energy')"><span class="int-card-icon">⚡</span><div class="int-card-name">Energy / Electric</div><div class="int-card-check">✓</div></div>
+          <div class="int-card" onclick="toggleInt(this,'mortgage')"><span class="int-card-icon">🏠</span><div class="int-card-name">Mortgage / Rent</div><div class="int-card-check">✓</div></div>
+          <div class="int-card" onclick="toggleInt(this,'internet')"><span class="int-card-icon">📡</span><div class="int-card-name">Internet / Cable</div><div class="int-card-check">✓</div></div>
+          <div class="int-card" onclick="toggleInt(this,'insurance')"><span class="int-card-icon">🚗</span><div class="int-card-name">Car Insurance</div><div class="int-card-check">✓</div></div>
+          <div class="int-card" onclick="toggleInt(this,'phone')"><span class="int-card-icon">📱</span><div class="int-card-name">Phone Plan</div><div class="int-card-check">✓</div></div>
+          <div class="int-card" onclick="toggleInt(this,'streaming')"><span class="int-card-icon">🎬</span><div class="int-card-name">Streaming</div><div class="int-card-check">✓</div></div>
+          <div class="int-card" onclick="toggleInt(this,'water')"><span class="int-card-icon">💧</span><div class="int-card-name">Water / Sewer</div><div class="int-card-check">✓</div></div>
+          <div class="int-card" onclick="toggleInt(this,'school')"><span class="int-card-icon">🎓</span><div class="int-card-name">School / Tuition</div><div class="int-card-check">✓</div></div>
+          <div class="int-card" onclick="toggleInt(this,'gym')"><span class="int-card-icon">💪</span><div class="int-card-name">Gym / Health</div><div class="int-card-check">✓</div></div>
+        </div>
+
+        <div class="custom-int">
+          <input type="text" id="customInt" placeholder="Don't see yours? Type it here...">
+          <button class="promo-apply" onclick="addCustomInt()">Add</button>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-ghost" onclick="showScreen(2)">← Back</button>
+          <button class="btn" onclick="goStep4()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- ══ SCREEN 4: PLAN ══ -->
+      <div id="screen-4" class="screen" style="display:none">
+        <div class="screen-title">Choose your plan</div>
+        <div class="screen-sub">Start free for 14 days. Cancel anytime. No credit card required for trial.</div>
+
+        <div class="plans-grid">
+          <div class="plan-card" onclick="selectPlan(this,'solo','9.99')" id="plan-solo">
+            <div class="plan-name">Solo</div>
+            <div class="plan-price">$9.99</div>
+            <div class="plan-period">/ month</div>
+            <ul class="plan-features">
+              <li>Daily briefing</li>
+              <li>Inbox triage</li>
+              <li>Weekly summary</li>
+              <li>2 integrations</li>
+            </ul>
+          </div>
+          <div class="plan-card popular selected" onclick="selectPlan(this,'family','19.99')" id="plan-family">
+            <div class="plan-popular">Most Popular</div>
+            <div class="plan-name">Family</div>
+            <div class="plan-price">$19.99</div>
+            <div class="plan-period">/ month</div>
+            <ul class="plan-features">
+              <li>Everything in Solo</li>
+              <li>Unlimited integrations</li>
+              <li>Deal finder</li>
+              <li>Supply ordering</li>
+              <li>Calendar sync</li>
+            </ul>
+          </div>
+          <div class="plan-card" onclick="selectPlan(this,'premium','39.99')" id="plan-premium">
+            <div class="plan-name">Premium</div>
+            <div class="plan-price">$39.99</div>
+            <div class="plan-period">/ month</div>
+            <ul class="plan-features">
+              <li>Everything in Family</li>
+              <li>SMS reminders</li>
+              <li>Bank account sync</li>
+              <li>Priority support</li>
+              <li>Custom workflows</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="font-size:0.7rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem">Have a promo code?</div>
+        <div class="promo-row">
+          <input class="promo-input" type="text" id="promoInput" placeholder="Enter code (e.g. BETA50)">
+          <button class="promo-apply" onclick="applyPromo()">Apply</button>
+        </div>
+        <div class="promo-msg" id="promoMsg"></div>
+
+        <div class="btn-row">
+          <button class="btn-ghost" onclick="showScreen(3)">← Back</button>
+          <button class="btn" onclick="goFinish()" id="finishBtn">Start Free Trial →</button>
+        </div>
+      </div>
+
+      <!-- ══ SCREEN 5: SUCCESS ══ -->
+      <div id="screen-5" class="screen" style="display:none">
+        <div class="success-screen">
+          <span class="success-icon">🎉</span>
+          <div class="success-title">Welcome to Steward!</div>
+          <div class="success-sub">Your family dashboard is ready. Your AI agents are standing by and your first morning briefing will arrive tomorrow at 7am.</div>
+          <div class="success-details" id="successDetails"></div>
+          <button class="btn" onclick="goToDashboard()" style="width:100%">Go to My Dashboard →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+var userData = {
+  name:'', email:'', password:'',
+  familyName:'', city:'', householdSize:'4',
+  kids:[], bills:[], integrations:[],
+  plan:'family', planPrice:'19.99',
+  promoCode:'', promoDiscount:0
+};
+
+var PROMO_CODES = {
+  'BETA50':  { discount:50,  label:'50% off — Beta tester' },
+  'FRIEND':  { discount:100, label:'100% free — Friend access' },
+  'LAUNCH':  { discount:25,  label:'25% off — Launch special' },
+  'STEWARD': { discount:100, label:'100% free — Team access' }
+};
+
+var kidCount = 0;
+var billCount = 0;
+var selectedInts = [];
+
+function showScreen(n) {
+  for(var i=1;i<=5;i++) {
+    var s=document.getElementById('screen-'+i);
+    if(s) s.style.display = i===n ? 'block' : 'none';
+  }
+  updateSteps(n);
+  window.scrollTo(0,0);
+}
+
+function updateSteps(n) {
+  for(var i=1;i<=4;i++) {
+    var el = document.getElementById('step-ind-'+i);
+    if(!el) continue;
+    el.className = 'step';
+    if(i < n) el.className = 'step done';
+    else if(i === n) el.className = 'step active';
+    var numEl = el.querySelector('.step-num');
+    if(i < n) numEl.textContent = '';
+  }
+  var bar = document.getElementById('stepsBar');
+  if(bar) bar.style.display = n===5 ? 'none' : 'flex';
+}
+
+/* ── STEP 1 VALIDATION ── */
+function goStep2() {
+  var name = document.getElementById('s1-name').value.trim();
+  var email = document.getElementById('s1-email').value.trim();
+  var pass = document.getElementById('s1-password').value;
+  var ok = true;
+
+  document.getElementById('err-name').textContent = '';
+  document.getElementById('err-email').textContent = '';
+  document.getElementById('err-password').textContent = '';
+
+  if(!name) { document.getElementById('err-name').textContent = 'Please enter your name'; ok=false; }
+  if(!email || !email.includes('@')) { document.getElementById('err-email').textContent = 'Please enter a valid email'; ok=false; }
+  if(pass.length < 8) { document.getElementById('err-password').textContent = 'Password must be at least 8 characters'; ok=false; }
+
+  if(!ok) return;
+  userData.name = name;
+  userData.email = email;
+  userData.password = pass;
+  document.getElementById('s2-family').value = name.split(' ')[0] + ' Family';
+  showScreen(2);
+}
+
+/* ── KIDS ── */
+function addKid() {
+  kidCount++;
+  var list = document.getElementById('kidsList');
+  var div = document.createElement('div');
+  div.className = 'kid-row';
+  div.id = 'kid-'+kidCount;
+  div.innerHTML =
+    '<input type="text" placeholder="Child\'s name" class="kid-name">'+
+    '<input type="number" placeholder="Age" min="0" max="25" class="kid-age">'+
+    '<button class="kid-remove" onclick="removeKid(\'kid-'+kidCount+'\')">×</button>';
+  list.appendChild(div);
+}
+
+function removeKid(id) {
+  var el = document.getElementById(id);
+  if(el) el.remove();
+}
+
+/* ── STEP 2 ── */
+function goStep3() {
+  userData.familyName = document.getElementById('s2-family').value.trim() || userData.name+' Family';
+  userData.city = document.getElementById('s2-city').value.trim();
+  userData.householdSize = document.getElementById('s2-size').value;
+  userData.kids = [];
+  document.querySelectorAll('.kid-row').forEach(function(row) {
+    var n = row.querySelector('.kid-name').value.trim();
+    var a = row.querySelector('.kid-age').value.trim();
+    if(n) userData.kids.push({name:n, age:a||'?'});
+  });
+  if(billCount === 0) {
+    addBill('Electric / Energy','142','monthly');
+    addBill('Internet','89','monthly');
+    addBill('Mortgage / Rent','','monthly');
+  }
+  showScreen(3);
+}
+
+/* ── BILLS ── */
+function addBill(name, amount, freq) {
+  billCount++;
+  var list = document.getElementById('billsList');
+  var div = document.createElement('div');
+  div.className = 'bill-row-input';
+  div.id = 'bill-'+billCount;
+  div.innerHTML =
+    '<input type="text" placeholder="Bill name" class="bill-name" value="'+(name||'')+'">'+
+    '<input type="text" placeholder="Provider" class="bill-provider">'+
+    '<input type="number" placeholder="$amt" class="bill-amount" value="'+(amount||'')+'">'+
+    '<button class="kid-remove" onclick="removeBill(\'bill-'+billCount+'\')">×</button>';
+  list.appendChild(div);
+}
+
+function removeBill(id) {
+  var el = document.getElementById(id);
+  if(el) el.remove();
+}
+
+/* ── INTEGRATIONS ── */
+function toggleInt(el, key) {
+  el.classList.toggle('selected');
+  var idx = selectedInts.indexOf(key);
+  if(idx > -1) selectedInts.splice(idx,1);
+  else selectedInts.push(key);
+}
+
+function addCustomInt() {
+  var val = document.getElementById('customInt').value.trim();
+  if(!val) return;
+  var grid = document.getElementById('intGrid');
+  var div = document.createElement('div');
+  var key = val.toLowerCase().replace(/\s+/g,'_');
+  div.className = 'int-card';
+  div.onclick = function(){ toggleInt(div, key); };
+  div.innerHTML = '<span class="int-card-icon">🔌</span><div class="int-card-name">'+val+'</div><div class="int-card-check">✓</div>';
+  grid.appendChild(div);
+  document.getElementById('customInt').value = '';
+}
+
+/* ── STEP 3 ── */
+function goStep4() {
+  userData.bills = [];
+  document.querySelectorAll('.bill-row-input').forEach(function(row) {
+    var n = row.querySelector('.bill-name').value.trim();
+    var p = row.querySelector('.bill-provider').value.trim();
+    var a = row.querySelector('.bill-amount').value.trim();
+    if(n) userData.bills.push({name:n, provider:p, amount:a});
+  });
+  userData.integrations = selectedInts.slice();
+  showScreen(4);
+}
+
+/* ── PLAN SELECTION ── */
+function selectPlan(el, plan, price) {
+  document.querySelectorAll('.plan-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');
+  userData.plan = plan;
+  userData.planPrice = price;
+  document.getElementById('promoMsg').textContent = '';
+  document.getElementById('promoInput').value = '';
+  userData.promoCode = '';
+  userData.promoDiscount = 0;
+  updateFinishBtn();
+}
+
+/* ── PROMO CODES ── */
+function applyPromo() {
+  var code = document.getElementById('promoInput').value.trim().toUpperCase();
+  var msg = document.getElementById('promoMsg');
+  if(!code) { msg.className='promo-msg error'; msg.textContent='Please enter a promo code'; return; }
+  if(PROMO_CODES[code]) {
+    var promo = PROMO_CODES[code];
+    userData.promoCode = code;
+    userData.promoDiscount = promo.discount;
+    msg.className = 'promo-msg success';
+    msg.textContent = '✓ ' + promo.label + ' applied!';
+    updateFinishBtn();
+  } else {
+    msg.className = 'promo-msg error';
+    msg.textContent = 'Invalid promo code. Try BETA50 or FRIEND.';
+    userData.promoCode = '';
+    userData.promoDiscount = 0;
+  }
+}
+
+function updateFinishBtn() {
+  var btn = document.getElementById('finishBtn');
+  if(userData.promoDiscount === 100) {
+    btn.textContent = 'Start Free — $0/mo →';
+  } else if(userData.promoDiscount > 0) {
+    var discounted = (parseFloat(userData.planPrice) * (1 - userData.promoDiscount/100)).toFixed(2);
+    btn.textContent = 'Start Free Trial — $'+discounted+'/mo →';
+  } else {
+    btn.textContent = 'Start Free Trial →';
+  }
+}
+
+/* ── FINISH ── */
+function goFinish() {
+  var finalPrice = userData.promoDiscount === 100 ? '0.00' :
+    userData.promoDiscount > 0 ?
+    (parseFloat(userData.planPrice) * (1 - userData.promoDiscount/100)).toFixed(2) :
+    userData.planPrice;
+
+  localStorage.setItem('stewardUser', JSON.stringify({
+    name: userData.name,
+    email: userData.email,
+    familyName: userData.familyName,
+    city: userData.city,
+    householdSize: userData.householdSize,
+    kids: userData.kids,
+    bills: userData.bills,
+    integrations: userData.integrations,
+    plan: userData.plan,
+    planPrice: finalPrice,
+    promoCode: userData.promoCode,
+    joinedAt: new Date().toISOString()
+  }));
+
+  var details = document.getElementById('successDetails');
+  var kidStr = userData.kids.length > 0 ?
+    userData.kids.map(function(k){return k.name+' ('+k.age+')'}).join(', ') :
+    'None added';
+  var billStr = userData.bills.length + ' bills tracked';
+  var planStr = userData.plan.charAt(0).toUpperCase()+userData.plan.slice(1)+' — $'+finalPrice+'/mo';
+  if(userData.promoCode) planStr += ' ('+userData.promoCode+')';
+
+  details.innerHTML =
+    '<div class="success-detail-row"><span class="success-detail-label">Family</span><span class="success-detail-val">'+userData.familyName+'</span></div>'+
+    '<div class="success-detail-row"><span class="success-detail-label">Kids</span><span class="success-detail-val">'+kidStr+'</span></div>'+
+    '<div class="success-detail-row"><span class="success-detail-label">Bills</span><span class="success-detail-val">'+billStr+'</span></div>'+
+    '<div class="success-detail-row"><span class="success-detail-label">Plan</span><span class="success-detail-val">'+planStr+'</span></div>'+
+    '<div class="success-detail-row"><span class="success-detail-label">Trial ends</span><span class="success-detail-val">'+getTrialEnd()+'</span></div>';
+
+  showScreen(5);
+}
+
+function getTrialEnd() {
+  var d = new Date();
+  d.setDate(d.getDate() + 14);
+  return d.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+}
+
+function goToDashboard() {
+  window.location.href = 'dashboard.html';
+}
+</script>
+</body>
+</html>
