@@ -183,6 +183,41 @@ body {
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
+
+.stat-clickable { cursor:pointer; transition:border-color 0.2s, transform 0.15s !important; }
+.stat-clickable:hover { border-color:rgba(56,217,169,0.4) !important; transform:translateY(-2px); }
+
+.filter-btn { background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:#6b7280; padding:0.35rem 0.8rem; font-family:'Nunito',sans-serif; font-size:0.7rem; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.filter-btn:hover { border-color:#38d9a9; color:#38d9a9; }
+.filter-btn.active { background:rgba(56,217,169,0.1); border-color:#38d9a9; color:#38d9a9; }
+
+.family-task-item { background:#181c27; border:1px solid rgba(255,255,255,0.07); border-radius:9px; padding:0.85rem 1rem; display:flex; align-items:flex-start; gap:0.8rem; transition:border-color 0.2s; }
+.family-task-item:hover { border-color:rgba(255,255,255,0.15); }
+.family-task-item.done-item { opacity:0.5; }
+.ft-check { width:18px; height:18px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); flex-shrink:0; margin-top:1px; cursor:pointer; transition:all 0.2s; }
+.ft-check:hover { border-color:#38d9a9; }
+.ft-check.done { background:#38d9a9; border-color:#38d9a9; }
+.ft-name { font-size:0.8rem; font-weight:700; line-height:1.3; }
+.ft-name.done { text-decoration:line-through; color:#4b5563; }
+.ft-meta { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.3rem; }
+.ft-tag { font-size:0.6rem; font-weight:700; padding:1px 6px; border-radius:4px; }
+.ft-tag.assign { background:rgba(96,165,250,0.1); color:#60a5fa; }
+.ft-tag.due-ok { background:rgba(56,217,169,0.1); color:#38d9a9; }
+.ft-tag.due-soon { background:rgba(251,191,36,0.1); color:#fbbf24; }
+.ft-tag.overdue { background:rgba(248,113,113,0.1); color:#f87171; }
+.ft-actions { margin-left:auto; display:flex; gap:0.4rem; flex-shrink:0; }
+.ft-action-btn { background:transparent; border:none; color:#4b5563; font-size:0.75rem; cursor:pointer; padding:0.2rem 0.4rem; border-radius:4px; transition:all 0.15s; }
+.ft-action-btn:hover { color:#e8eaf2; background:rgba(255,255,255,0.08); }
+
+.drawer-list-item { display:flex; align-items:center; gap:0.7rem; padding:0.65rem 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.78rem; }
+.drawer-list-item:last-child { border-bottom:none; }
+.drawer-drag { color:#4b5563; cursor:grab; font-size:0.9rem; }
+.drawer-item-name { font-weight:600; flex:1; }
+.drawer-item-sub { font-size:0.63rem; color:#6b7280; }
+.drawer-edit-btn { background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:5px; color:#9ca3af; font-size:0.62rem; font-weight:700; padding:0.2rem 0.5rem; cursor:pointer; transition:all 0.15s; }
+.drawer-edit-btn:hover { border-color:#38d9a9; color:#38d9a9; }
+.drawer-remove-btn { background:transparent; border:none; color:#4b5563; font-size:0.85rem; cursor:pointer; padding:0.2rem 0.4rem; border-radius:4px; }
+.drawer-remove-btn:hover { color:#f87171; background:rgba(248,113,113,0.1); }
 @media(max-width:860px){
   #sidebar{display:none}
   .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -253,10 +288,42 @@ body {
     <!-- DASHBOARD -->
     <div class="panel active" id="panel-dashboard">
       <div class="stats-grid">
-        <div class="stat-card"><span class="stat-icon">💳</span><div class="stat-val" id="stat-bills">—</div><div class="stat-lbl">Bills Tracked</div><div class="stat-hint amber" id="stat-bills-hint">Add bills to get started</div></div>
-        <div class="stat-card"><span class="stat-icon">👨‍👩‍👧‍👦</span><div class="stat-val" id="stat-family">—</div><div class="stat-lbl">Family Members</div><div class="stat-hint blue" id="stat-family-hint">Set up in onboarding</div></div>
-        <div class="stat-card"><span class="stat-icon">🔌</span><div class="stat-val" id="stat-ints">—</div><div class="stat-lbl">Integrations</div><div class="stat-hint green" id="stat-ints-hint">Connect providers</div></div>
-        <div class="stat-card"><span class="stat-icon">⭐</span><div class="stat-val" id="stat-plan">—</div><div class="stat-lbl">Your Plan</div><div class="stat-hint blue" id="stat-plan-hint">Active</div></div>
+        <div class="stat-card stat-clickable" onclick="openDrawer('bills')" title="Click to manage bills">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span class="stat-icon">💳</span>
+            <span style="font-size:0.55rem;color:#4b5563;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px">Click to manage</span>
+          </div>
+          <div class="stat-val" id="stat-bills">—</div>
+          <div class="stat-lbl">Bills Tracked</div>
+          <div class="stat-hint amber" id="stat-bills-hint">Add bills to get started</div>
+        </div>
+        <div class="stat-card stat-clickable" onclick="openDrawer('family')" title="Click to manage family">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span class="stat-icon">👨‍👩‍👧‍👦</span>
+            <span style="font-size:0.55rem;color:#4b5563;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px">Click to manage</span>
+          </div>
+          <div class="stat-val" id="stat-family">—</div>
+          <div class="stat-lbl">Family Members</div>
+          <div class="stat-hint blue" id="stat-family-hint">Set up in onboarding</div>
+        </div>
+        <div class="stat-card stat-clickable" onclick="openDrawer('integrations')" title="Click to manage integrations">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span class="stat-icon">🔌</span>
+            <span style="font-size:0.55rem;color:#4b5563;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px">Click to manage</span>
+          </div>
+          <div class="stat-val" id="stat-ints">—</div>
+          <div class="stat-lbl">Integrations</div>
+          <div class="stat-hint green" id="stat-ints-hint">Connect providers</div>
+        </div>
+        <div class="stat-card stat-clickable" onclick="openDrawer('plan')" title="Click to manage plan">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span class="stat-icon">⭐</span>
+            <span style="font-size:0.55rem;color:#4b5563;letter-spacing:0.1em;text-transform:uppercase;margin-top:2px">Click to manage</span>
+          </div>
+          <div class="stat-val" id="stat-plan">—</div>
+          <div class="stat-lbl">Your Plan</div>
+          <div class="stat-hint blue" id="stat-plan-hint">Active</div>
+        </div>
       </div>
       <div class="two-col">
         <div class="card">
@@ -270,12 +337,22 @@ body {
           <div class="card-body" id="dash-tasks">
             <div class="task-row"><div class="task-check done" onclick="toggleTask(this)"></div><div><div class="task-text done">Create your account</div><div class="task-meta">Done!</div></div></div>
             <div class="task-row"><div class="task-check" id="task-bills-check" onclick="toggleTask(this)"></div><div><div class="task-text" id="task-bills-text">Add your bills</div><div class="task-meta">Go to Bill Pay section</div></div></div>
-            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Connect your first provider</div><div class="task-meta">Go to AI Agents</div></div></div>
+            <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Connect your first provider</div><div class="task-meta">Go to Integrations</div></div></div>
             <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Chat with your Bill Manager</div><div class="task-meta">Try the AI Agents tab</div></div></div>
             <div class="task-row"><div class="task-check" onclick="toggleTask(this)"></div><div><div class="task-text">Set up your family schedule</div><div class="task-meta">Go to Schedule section</div></div></div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- SLIDE-OUT DRAWER -->
+    <div id="drawer-backdrop" onclick="closeDrawer()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200"></div>
+    <div id="drawer" style="display:none;position:fixed;top:0;right:0;bottom:0;width:420px;max-width:95vw;background:#181c27;border-left:1px solid rgba(255,255,255,0.1);z-index:201;overflow-y:auto;flex-direction:column">
+      <div style="padding:1.2rem 1.4rem;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#181c27;z-index:1">
+        <div id="drawer-title" style="font-family:'Lora',serif;font-size:1.1rem;font-weight:600"></div>
+        <button onclick="closeDrawer()" style="background:rgba(255,255,255,0.07);border:none;border-radius:6px;color:#9ca3af;width:28px;height:28px;cursor:pointer;font-size:1.1rem">×</button>
+      </div>
+      <div id="drawer-body" style="padding:1.2rem 1.4rem;flex:1"></div>
     </div>
 
     <!-- AI AGENTS -->
@@ -304,53 +381,112 @@ body {
 
     <!-- BILLS -->
     <div class="panel" id="panel-bills">
-      <div class="toolbar"><div><h2>Bill Pay Dashboard</h2><p id="bills-subtitle">No bills added yet</p></div><div class="toolbar-btns"><button class="btn-ghost">+ Add Bill</button><button class="btn" onclick="navTo('agents')">🤖 Ask Agent</button></div></div>
-      <div class="bill-cards-grid" id="bills-cards-grid">
-        <div style="font-size:0.78rem;color:#4b5563;padding:1rem">No bills found. <a href="steward-signup.html" style="color:#38d9a9;font-weight:700">Go back to setup →</a></div>
+      <div class="toolbar">
+        <div><h2>Bill Pay Dashboard</h2><p id="bills-subtitle">Track all your bills in one place</p></div>
+        <div class="toolbar-btns">
+          <button class="btn" onclick="openAddBillModal()">+ Add Bill</button>
+          <button class="btn-ghost" onclick="navTo('agents')">🤖 Ask Agent</button>
+        </div>
+      </div>
+      <div id="bills-cards-grid" class="bill-cards-grid">
+        <div style="font-size:0.78rem;color:#4b5563;padding:1rem">No bills yet. Click "+ Add Bill" to get started.</div>
       </div>
     </div>
 
-    <!-- SUPPLIES -->
-    <div class="panel" id="panel-supplies">
-      <div class="toolbar"><div><h2>Household Supplies</h2><p>5 items running low · Suggested reorder: $52</p></div><div class="toolbar-btns"><button class="btn-ghost">+ Add Item</button><button class="btn" onclick="navTo('agents')">🤖 Auto-Order</button></div></div>
-      <div class="two-col">
-        <div class="card"><div class="card-head"><span class="card-title">🔴 Low Stock — Order Now</span></div><div class="card-body">
-          <div class="item-row"><span style="font-size:1rem">🧴</span><span class="item-name">Dish Soap</span><span class="item-qty red">OUT</span></div>
-          <div class="item-row"><span style="font-size:1rem">🧻</span><span class="item-name">Paper Towels</span><span class="item-qty red">1 roll left</span></div>
-          <div class="item-row"><span style="font-size:1rem">🦷</span><span class="item-name">Kids Toothpaste</span><span class="item-qty amber">~3 days</span></div>
-          <div class="item-row"><span style="font-size:1rem">🛁</span><span class="item-name">Baby Shampoo</span><span class="item-qty amber">~1 week</span></div>
-          <div class="item-row"><span style="font-size:1rem">💊</span><span class="item-name">Children's Tylenol</span><span class="item-qty amber">4 doses</span></div>
-        </div></div>
-        <div class="card"><div class="card-head"><span class="card-title">✅ Well Stocked</span></div><div class="card-body">
-          <div class="item-row"><span style="font-size:1rem">🧼</span><span class="item-name">Hand Soap (×4)</span><span class="item-qty green">OK</span></div>
-          <div class="item-row"><span style="font-size:1rem">🍽️</span><span class="item-name">Dishwasher Pods</span><span class="item-qty green">38 left</span></div>
-          <div class="item-row"><span style="font-size:1rem">🧺</span><span class="item-name">Laundry Detergent</span><span class="item-qty green">~5 washes</span></div>
-          <div class="item-row"><span style="font-size:1rem">🍪</span><span class="item-name">Snack Bars (×24)</span><span class="item-qty green">2 boxes</span></div>
-          <div class="item-row"><span style="font-size:1rem">🥛</span><span class="item-name">Juice Boxes</span><span class="item-qty green">18 left</span></div>
-        </div></div>
+    <!-- ADD BILL MODAL -->
+    <div id="add-bill-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;align-items:center;justify-content:center;padding:1rem">
+      <div style="background:#181c27;border:1px solid rgba(255,255,255,0.1);border-radius:14px;width:100%;max-width:440px">
+        <div style="padding:1.2rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:0.9rem;font-weight:700" id="add-bill-modal-title">Add a Bill</div>
+          <button onclick="closeAddBillModal()" style="background:rgba(255,255,255,0.07);border:none;border-radius:6px;color:#9ca3af;width:28px;height:28px;cursor:pointer;font-size:1.1rem">×</button>
+        </div>
+        <div style="padding:1.3rem 1.5rem">
+          <div style="margin-bottom:0.9rem"><label style="display:block;font-size:0.68rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Bill Name</label><input id="ab-name" type="text" placeholder="e.g. Electric, Mortgage, Netflix" style="width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.8rem;outline:none"></div>
+          <div style="margin-bottom:0.9rem"><label style="display:block;font-size:0.68rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Provider Name</label><input id="ab-provider" type="text" placeholder="e.g. ConEd, Chase, T-Mobile" style="width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.8rem;outline:none"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-bottom:0.9rem">
+            <div><label style="display:block;font-size:0.68rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Amount ($)</label><input id="ab-amount" type="number" placeholder="0.00" style="width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.8rem;outline:none"></div>
+            <div><label style="display:block;font-size:0.68rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Due Day of Month</label><input id="ab-due" type="number" min="1" max="31" placeholder="e.g. 15" style="width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.8rem;outline:none"></div>
+          </div>
+          <div style="margin-bottom:1.2rem"><label style="display:block;font-size:0.68rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Payment URL (where you pay this bill)</label><input id="ab-url" type="url" placeholder="https://www.coned.com/pay" style="width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.8rem;outline:none"></div>
+          <div style="display:flex;gap:0.7rem">
+            <button onclick="closeAddBillModal()" class="btn-ghost" style="flex:1">Cancel</button>
+            <button onclick="saveNewBill()" class="btn" style="flex:2" id="save-bill-btn">Save Bill</button>
+          </div>
+        </div>
       </div>
-      <div class="card"><div class="card-head"><span class="card-title">🛒 Suggested Amazon Order — $52.14 total</span><button class="btn btn-sm">Order Now</button></div><div class="card-body"><div class="deals-grid">
-        <div class="deal-card"><span class="deal-icon">🧴</span><div><div class="deal-name">Dawn Dish Soap 3-pack</div><div class="deal-store">Amazon</div><div class="deal-price">$7.49</div></div></div>
-        <div class="deal-card"><span class="deal-icon">🧻</span><div><div class="deal-name">Bounty Paper Towels ×8</div><div class="deal-store">Costco</div><div class="deal-price">$18.99</div></div></div>
-        <div class="deal-card"><span class="deal-icon">🦷</span><div><div class="deal-name">Kids Toothpaste ×3</div><div class="deal-store">Target</div><div class="deal-price">$11.49</div></div></div>
-        <div class="deal-card"><span class="deal-icon">💊</span><div><div class="deal-name">Children's Tylenol ×2</div><div class="deal-store">Walgreens</div><div class="deal-price">$14.99</div></div></div>
-      </div></div></div>
+    </div>
+
+    <!-- SUPPLIES → FAMILY TASK LIST -->
+    <div class="panel" id="panel-supplies">
+      <div class="toolbar">
+        <div><h2>Family Task List</h2><p>Shared list — anyone in the family can check things off</p></div>
+        <button class="btn" onclick="openAddTaskModal()">+ Add Item</button>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div style="display:flex;gap:0.5rem;margin-bottom:1.2rem;flex-wrap:wrap">
+        <button class="filter-btn active" onclick="filterTasks('all',this)">All</button>
+        <button class="filter-btn" onclick="filterTasks('pending',this)">Pending</button>
+        <button class="filter-btn" onclick="filterTasks('done',this)">Done</button>
+        <button class="filter-btn" onclick="filterTasks('overdue',this)">Overdue</button>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:0.5rem">
+          <label style="font-size:0.68rem;color:#6b7280">Assign to:</label>
+          <select id="filter-member" onchange="filterByMember()" style="background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#e8eaf2;padding:0.3rem 0.6rem;font-family:'Nunito',sans-serif;font-size:0.7rem;outline:none">
+            <option value="all">Everyone</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="family-task-list" style="display:flex;flex-direction:column;gap:0.5rem"></div>
+      <div id="task-empty" style="display:none;font-size:0.78rem;color:#4b5563;padding:1.5rem;text-align:center">No tasks yet. Click "+ Add Item" to get started.</div>
+    </div>
+
+    <!-- ADD TASK MODAL -->
+    <div id="add-task-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;align-items:center;justify-content:center;padding:1rem">
+      <div style="background:#181c27;border:1px solid rgba(255,255,255,0.1);border-radius:14px;width:100%;max-width:440px">
+        <div style="padding:1.2rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:0.9rem;font-weight:700">Add Task / Item</div>
+          <button onclick="closeAddTaskModal()" style="background:rgba(255,255,255,0.07);border:none;border-radius:6px;color:#9ca3af;width:28px;height:28px;cursor:pointer;font-size:1.1rem">×</button>
+        </div>
+        <div style="padding:1.3rem 1.5rem">
+          <div style="margin-bottom:0.9rem"><label style="display:block;font-size:0.68rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Task / Item Name</label><input id="at-name" type="text" placeholder="e.g. Buy dish soap, Call doctor, Pick up dry cleaning" style="width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.8rem;outline:none"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-bottom:0.9rem">
+            <div><label style="display:block;font-size:0.68rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Due Date</label><input id="at-due" type="date" style="width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.8rem;outline:none"></div>
+            <div><label style="display:block;font-size:0.68rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Assign To</label>
+              <select id="at-assign" style="width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.8rem;outline:none;appearance:none">
+                <option value="Anyone">Anyone</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:1.2rem"><label style="display:block;font-size:0.68rem;font-weight:700;color:#9ca3af;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Notes (optional)</label><input id="at-notes" type="text" placeholder="Any extra details..." style="width:100%;background:#1e2332;border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#e8eaf2;padding:0.65rem 0.9rem;font-family:'Nunito',sans-serif;font-size:0.8rem;outline:none"></div>
+          <div style="display:flex;gap:0.7rem">
+            <button onclick="closeAddTaskModal()" class="btn-ghost" style="flex:1">Cancel</button>
+            <button onclick="saveFamilyTask()" class="btn" style="flex:2">Add to List</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- DEALS -->
     <div class="panel" id="panel-deals">
-      <div class="toolbar"><div><h2>AI Deal Finder</h2><p>Enter any item — Steward compares prices across all major stores</p></div></div>
+      <div class="toolbar"><div><h2>AI Deal Finder</h2><p>Find the best price — click any result to go directly to that page</p></div></div>
+
+      <div style="background:rgba(56,217,169,0.06);border:1px solid rgba(56,217,169,0.15);border-radius:8px;padding:0.7rem 1rem;margin-bottom:1.2rem;font-size:0.7rem;color:#38d9a9;line-height:1.6">
+        💡 <strong>Tip:</strong> Results link directly to vendor pages. Some links include an affiliate code — if you buy, Steward earns a small commission at no extra cost to you.
+      </div>
+
       <div class="search-row">
-        <input class="search-input" id="dealSearch" placeholder="e.g. Lego Technic, Nike kids sneakers, Instant Pot..." onkeydown="if(event.key==='Enter')searchDeal()">
+        <input class="search-input" id="dealSearch" placeholder="e.g. Lego Technic set, Nike Air Max kids, Instant Pot 6qt..." onkeydown="if(event.key==='Enter')searchDeal()">
         <button class="btn" onclick="searchDeal()">🔍 Find Best Deal</button>
       </div>
       <div id="dealResults"></div>
-      <div class="card"><div class="card-head"><span class="card-title">🔥 Steward-Spotted Deals This Week</span></div><div class="card-body"><div class="deals-grid">
-        <div class="deal-card"><span class="deal-icon">🎒</span><div><div class="deal-name">JanSport Backpack</div><div class="deal-store">Target (online)</div><div><span class="deal-price">$24.99</span><span class="deal-was">$44.99</span><span class="deal-save">-44%</span></div></div></div>
-        <div class="deal-card"><span class="deal-icon">🖍️</span><div><div class="deal-name">Crayola 150pc Set</div><div class="deal-store">Amazon Prime</div><div><span class="deal-price">$12.49</span><span class="deal-was">$19.99</span><span class="deal-save">-38%</span></div></div></div>
-        <div class="deal-card"><span class="deal-icon">⚽</span><div><div class="deal-name">Wilson Soccer Ball Sz 4</div><div class="deal-store">Dick's Sporting Goods</div><div><span class="deal-price">$16.00</span><span class="deal-was">$28.00</span><span class="deal-save">-43%</span></div></div></div>
-        <div class="deal-card"><span class="deal-icon">📚</span><div><div class="deal-name">Magic Tree House 1–8</div><div class="deal-store">Amazon</div><div><span class="deal-price">$22.49</span><span class="deal-was">$39.92</span><span class="deal-save">-44%</span></div></div></div>
-      </div></div></div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-title">🔥 Steward-Spotted Deals This Week</span></div>
+        <div class="card-body">
+          <div class="deals-grid" id="featured-deals"></div>
+        </div>
+      </div>
     </div>
 
     <!-- SCHEDULE -->
@@ -1138,9 +1274,241 @@ navTo = function(id) {
   if(id === 'integrations') initIntegrations();
 };
 
-// Also update the panel title map
-var origTitles = {dashboard:'Good morning \uD83D\uDC4B',agents:'AI Agents',bills:'Bill Pay Dashboard',supplies:'Household Supplies',deals:'AI Deal Finder',integrations:'Integrations',schedule:'Family Schedule',tasks:'Family Tasks',budget:'Monthly Budget'};
-
+// =============================================
+// AFFILIATE LINK MAP
+// =============================================
+var AFFILIATE_TAGS = {
+  amazon:  { tag:'stewardfam-20', base:'https://www.amazon.com/s?k=' },
+  target:  { tag:'stewardfam',    base:'https://www.target.com/s?searchTerm=' },
+  walmart: { tag:'stewardfam',    base:'https://www.walmart.com/search?q=' },
+  costco:  { base:'https://www.costco.com/CatalogSearch?keyword=' },
+  dicks:   { base:'https://www.dickssportinggoods.com/search/SearchDisplay?SearchTerm=' },
+  walgreens:{ base:'https://www.walgreens.com/search/results.jsp?Ntt=' }
+};
+function buildAffiliateUrl(store, query) {
+  var s = store.toLowerCase();
+  var key = Object.keys(AFFILIATE_TAGS).find(function(k){ return s.includes(k); });
+  if(!key) return 'https://www.google.com/search?q=' + encodeURIComponent(store + ' ' + query);
+  var aff = AFFILIATE_TAGS[key];
+  var url = aff.base + encodeURIComponent(query);
+  if(aff.tag) url += (url.includes('?') ? '&' : '?') + 'tag=' + aff.tag;
+  return url;
+}
+var FEATURED = [
+  { icon:'🎒', name:'JanSport Backpack', store:'Target', price:'$24.99', was:'$44.99', save:'-44%', query:'JanSport backpack' },
+  { icon:'🖍️', name:'Crayola 150pc Set', store:'Amazon', price:'$12.49', was:'$19.99', save:'-38%', query:'Crayola 150 piece set' },
+  { icon:'⚽', name:'Wilson Soccer Ball Sz 4', store:'Dicks', price:'$16.00', was:'$28.00', save:'-43%', query:'Wilson soccer ball size 4' },
+  { icon:'📚', name:'Magic Tree House 1-8 Box', store:'Amazon', price:'$22.49', was:'$39.92', save:'-44%', query:'Magic Tree House books 1-8' }
+];
+function renderFeaturedDeals() {
+  var el = document.getElementById('featured-deals');
+  if(!el) return;
+  el.innerHTML = FEATURED.map(function(d) {
+    var url = buildAffiliateUrl(d.store, d.query);
+    return '<a href="'+url+'" target="_blank" rel="noopener" class="deal-card" style="text-decoration:none;color:inherit">'+
+      '<span class="deal-icon">'+d.icon+'</span><div>'+
+      '<div class="deal-name">'+d.name+'</div>'+
+      '<div class="deal-store">'+d.store+' · click to open</div>'+
+      '<div><span class="deal-price">'+d.price+'</span><span class="deal-was">'+d.was+'</span><span class="deal-save">'+d.save+'</span></div>'+
+      '</div></a>';
+  }).join('');
+}
+async function searchDeal() {
+  var q = document.getElementById('dealSearch').value.trim();
+  if(!q) return;
+  var r = document.getElementById('dealResults');
+  r.innerHTML = '<div class="card" style="margin-bottom:1rem"><div class="card-body" style="font-size:.75rem;color:#6b7280;padding:1rem">Searching for "'+q+'"...</div></div>';
+  try {
+    var res = await fetch('https://steward-proxy-production.up.railway.app/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:800,messages:[{role:'user',content:'Shopping agent: find best price for "'+q+'". Return ONLY a JSON array of 4 objects with keys: store (one of: Amazon, Target, Walmart, Costco), price (e.g. "$24.99"), note (max 8 words), savings (e.g. "Save $8" or null). No markdown, no text outside the array.'}]})});
+    var data = await res.json();
+    var txt = (data.content&&data.content[0]&&data.content[0].text)?data.content[0].text:'[]';
+    txt = txt.replace(/```json|```/g,'').trim();
+    var deals = JSON.parse(txt);
+    var icons={Amazon:'📦',Target:'🎯',Walmart:'🛒',Costco:'🏪'};
+    var h='<div class="card" style="margin-bottom:1rem"><div class="card-head"><span class="card-title">Best prices for &quot;'+q+'&quot;</span><span style="font-size:0.63rem;color:#6b7280">Click to open store page</span></div><div class="card-body"><div class="deals-grid">';
+    for(var i=0;i<deals.length;i++){
+      var d=deals[i];
+      var url=buildAffiliateUrl(d.store,q);
+      h+='<a href="'+url+'" target="_blank" rel="noopener" class="deal-card" style="text-decoration:none;color:inherit;'+(i===0?'border-color:#38d9a9':'')+'">'+
+        '<span class="deal-icon">'+(icons[d.store]||'🛍️')+'</span><div>'+
+        (i===0?'<div style="font-size:.58rem;color:#38d9a9;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">Best Deal</div>':'')+
+        '<div class="deal-name">'+d.store+'</div><div class="deal-store">'+d.note+' · click to open</div>'+
+        '<div><span class="deal-price">'+d.price+'</span>'+(d.savings?'<span class="deal-save">'+d.savings+'</span>':'')+
+        '</div></div></a>';
+    }
+    h+='</div></div></div>';
+    r.innerHTML=h;
+  } catch(e){ r.innerHTML='<div class="card" style="margin-bottom:1rem"><div class="card-body" style="font-size:.75rem;color:#6b7280">Could not fetch results. Try again.</div></div>'; }
+}
+// =============================================
+// BILLS CRUD
+// =============================================
+var stewardBills=[];
+var editingBillId=null;
+function loadBills(){
+  var raw=localStorage.getItem('stewardBills');
+  if(raw){try{stewardBills=JSON.parse(raw);}catch(e){}}
+  if(stewardBills.length===0){
+    var ud=localStorage.getItem('stewardUser');
+    if(ud){try{var u=JSON.parse(ud);if(u.bills&&u.bills.length>0){stewardBills=u.bills.map(function(b,i){return{id:'bill_'+i,name:b.name,provider:b.provider||'',amount:b.amount||'',dueDay:'',payUrl:'',fromIntegration:false};});saveBills();}}catch(e){}}
+  }
+  var ir=localStorage.getItem('stewardIntegrations');
+  if(ir){try{var ints=JSON.parse(ir);Object.keys(ints).forEach(function(id){var c=ints[id];var ex=stewardBills.find(function(b){return b.integrationId===id;});if(!ex)stewardBills.push({id:'int_'+id,integrationId:id,name:c.name,provider:c.name,amount:c.balance?c.balance.replace('$',''):'',dueDay:c.dueDate||'',payUrl:'',fromIntegration:true,balance:c.balance,dueDate:c.dueDate});});}catch(e){}}
+}
+function saveBills(){localStorage.setItem('stewardBills',JSON.stringify(stewardBills));}
+function renderBillsPanel(){
+  loadBills();
+  var grid=document.getElementById('bills-cards-grid');
+  var sub=document.getElementById('bills-subtitle');
+  if(!grid)return;
+  if(stewardBills.length===0){grid.innerHTML='<div style="font-size:0.78rem;color:#4b5563;padding:1rem">No bills yet. Click "+ Add Bill" to get started.</div>';if(sub)sub.textContent='No bills yet';return;}
+  var total=stewardBills.reduce(function(s,b){return s+(parseFloat(b.amount)||0);},0);
+  if(sub)sub.textContent=stewardBills.length+' bill'+(stewardBills.length>1?'s':'')+' tracked · ~$'+total.toFixed(0)+'/month';
+  var bi={'electric':'⚡','energy':'⚡','internet':'📡','cable':'📡','mortgage':'🏠','rent':'🏠','insurance':'🚗','phone':'📱','water':'💧','school':'🎓','gym':'💪','streaming':'🎬','netflix':'🎬','spotify':'🎵'};
+  grid.innerHTML=stewardBills.map(function(b){
+    var ik=Object.keys(bi).find(function(k){return(b.name||'').toLowerCase().includes(k)||(b.provider||'').toLowerCase().includes(k);});
+    var icon=ik?bi[ik]:'💳';
+    var amt=b.amount?'$'+parseFloat(b.amount).toFixed(2):'Amount not set';
+    var due=b.dueDay?'Due day '+b.dueDay:(b.dueDate||'Due date not set');
+    return '<div class="bill-card">'+
+      '<div class="bill-card-top"><span class="bill-card-icon">'+icon+'</span>'+(b.fromIntegration?'<span class="badge badge-green">Connected</span>':'<span class="badge badge-amber">Manual</span>')+'</div>'+
+      '<div class="bill-card-name">'+b.name+'</div>'+
+      '<div class="bill-card-cat">'+(b.provider||'Provider not set')+'</div>'+
+      '<div class="bill-card-amount">'+amt+'</div>'+
+      '<div class="bill-card-due">'+due+'</div>'+
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.9rem">'+
+      (b.payUrl?'<a href="'+b.payUrl+'" target="_blank" rel="noopener" class="btn btn-sm" style="text-decoration:none">Pay Now</a>':'<button class="btn btn-sm" onclick="openAddBillModal(''+b.id+'')">+ Add Pay URL</button>')+
+      ' <button class="btn-ghost btn-sm" onclick="openAddBillModal(''+b.id+'')">Edit</button>'+
+      ' <button class="btn-ghost btn-sm" style="border-color:rgba(248,113,113,0.2);color:#f87171" onclick="deleteBill(''+b.id+'')">Remove</button>'+
+      '</div></div>';
+  }).join('');
+  var db=document.getElementById('dash-bills');
+  if(db&&stewardBills.length>0){var bi2={'electric':'⚡','internet':'📡','mortgage':'🏠','insurance':'🚗','phone':'📱'};db.innerHTML=stewardBills.slice(0,4).map(function(b){var ik2=Object.keys(bi2).find(function(k){return(b.name||'').toLowerCase().includes(k);});var ic=ik2?bi2[ik2]:'💳';var am=b.amount?'$'+parseFloat(b.amount).toFixed(0):'—';return'<div class="bill-row"><div class="bill-left"><span class="bill-icon">'+ic+'</span><div><div class="bill-name">'+b.name+'</div></div></div><div class="bill-right"><span class="bill-amount">'+am+'</span></div></div>';}).join('');}
+  var sb=document.getElementById('stat-bills');if(sb)sb.textContent=stewardBills.length;
+}
+function openAddBillModal(id){
+  editingBillId=id||null;
+  var title=document.getElementById('add-bill-modal-title');
+  if(id){var b=stewardBills.find(function(x){return x.id===id;});if(b){if(title)title.textContent='Edit Bill';document.getElementById('ab-name').value=b.name||'';document.getElementById('ab-provider').value=b.provider||'';document.getElementById('ab-amount').value=b.amount||'';document.getElementById('ab-due').value=b.dueDay||'';document.getElementById('ab-url').value=b.payUrl||'';}}
+  else{if(title)title.textContent='Add a Bill';['ab-name','ab-provider','ab-amount','ab-due','ab-url'].forEach(function(i){var e=document.getElementById(i);if(e)e.value='';});}
+  document.getElementById('add-bill-modal').style.display='flex';
+}
+function closeAddBillModal(){document.getElementById('add-bill-modal').style.display='none';editingBillId=null;}
+function saveNewBill(){
+  var name=document.getElementById('ab-name').value.trim();
+  if(!name){alert('Please enter a bill name');return;}
+  var bill={id:editingBillId||'bill_'+Date.now(),name:name,provider:document.getElementById('ab-provider').value.trim(),amount:document.getElementById('ab-amount').value.trim(),dueDay:document.getElementById('ab-due').value.trim(),payUrl:document.getElementById('ab-url').value.trim(),fromIntegration:false};
+  if(editingBillId){var idx=stewardBills.findIndex(function(b){return b.id===editingBillId;});if(idx>-1)stewardBills[idx]=bill;}
+  else stewardBills.push(bill);
+  saveBills();closeAddBillModal();renderBillsPanel();
+}
+function editBill(id){openAddBillModal(id);}
+function deleteBill(id){if(!confirm('Remove this bill?'))return;stewardBills=stewardBills.filter(function(b){return b.id!==id;});saveBills();renderBillsPanel();}
+// =============================================
+// FAMILY TASK LIST
+// =============================================
+var familyTasks=[];
+function loadFamilyTasks(){var r=localStorage.getItem('stewardFamilyTasks');if(r){try{familyTasks=JSON.parse(r);}catch(e){}}}
+function saveFamilyTasks(){localStorage.setItem('stewardFamilyTasks',JSON.stringify(familyTasks));}
+function getFamilyMembers(){var m=['Anyone'];var r=localStorage.getItem('stewardUser');if(r){try{var u=JSON.parse(r);if(u.name)m.push(u.name.split(' ')[0]);if(u.kids)u.kids.forEach(function(k){if(k.name)m.push(k.name);});}catch(e){}}return m;}
+function populateMemberSelects(){var members=getFamilyMembers();['filter-member','at-assign'].forEach(function(id){var el=document.getElementById(id);if(!el)return;var cur=el.value;el.innerHTML=(id==='filter-member'?'<option value="all">Everyone</option>':'')+members.map(function(m){return'<option value="'+m+'">'+m+'</option>';}).join('');if(cur)el.value=cur;});}
+function renderFamilyTasks(filter,memberFilter){
+  loadFamilyTasks();
+  var list=document.getElementById('family-task-list');var empty=document.getElementById('task-empty');if(!list)return;
+  var today=new Date();today.setHours(0,0,0,0);
+  var filtered=familyTasks.filter(function(t){
+    if(memberFilter&&memberFilter!=='all'&&memberFilter!=='Everyone'&&t.assignTo!==memberFilter)return false;
+    if(!filter||filter==='all')return true;
+    if(filter==='done')return t.done;
+    if(filter==='pending')return!t.done;
+    if(filter==='overdue'){if(t.done||!t.due)return false;return new Date(t.due)<today;}
+    return true;
+  });
+  if(filtered.length===0){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=filtered.map(function(t){
+    var dueTag='';
+    if(t.due){var d=new Date(t.due);d.setHours(0,0,0,0);var diff=Math.round((d-today)/(1000*60*60*24));var ds=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});if(t.done)dueTag='<span class="ft-tag due-ok">Done</span>';else if(diff<0)dueTag='<span class="ft-tag overdue">Overdue '+ds+'</span>';else if(diff<=3)dueTag='<span class="ft-tag due-soon">Due '+ds+'</span>';else dueTag='<span class="ft-tag due-ok">Due '+ds+'</span>';}
+    return'<div class="family-task-item'+(t.done?' done-item':'')+'" id="ft-'+t.id+'">'+
+      '<div class="ft-check'+(t.done?' done':'')+'" onclick="toggleFamilyTask(''+t.id+'')"></div>'+
+      '<div style="flex:1;min-width:0"><div class="ft-name'+(t.done?' done':'')+'">'+t.name+'</div>'+
+      '<div class="ft-meta">'+(t.assignTo&&t.assignTo!=='Anyone'?'<span class="ft-tag assign">'+t.assignTo+'</span>':'')+dueTag+(t.notes?'<span style="font-size:0.62rem;color:#4b5563">'+t.notes+'</span>':'')+'</div></div>'+
+      '<div class="ft-actions"><button class="ft-action-btn" onclick="editFamilyTask(''+t.id+'')" title="Edit">✏️</button><button class="ft-action-btn" onclick="deleteFamilyTask(''+t.id+'')" title="Remove" style="color:#f87171">×</button></div>'+
+    '</div>';
+  }).join('');
+}
+function toggleFamilyTask(id){var t=familyTasks.find(function(x){return x.id===id;});if(t){t.done=!t.done;saveFamilyTasks();renderFamilyTasks(window._taskFilter||'all',window._memberFilter||'all');}}
+function deleteFamilyTask(id){if(!confirm('Remove this task?'))return;familyTasks=familyTasks.filter(function(t){return t.id!==id;});saveFamilyTasks();renderFamilyTasks(window._taskFilter||'all',window._memberFilter||'all');}
+var _editingTaskId=null;
+function openAddTaskModal(task){
+  populateMemberSelects();_editingTaskId=task?task.id:null;
+  if(task){document.getElementById('at-name').value=task.name||'';document.getElementById('at-due').value=task.due||'';document.getElementById('at-assign').value=task.assignTo||'Anyone';document.getElementById('at-notes').value=task.notes||'';}
+  else{['at-name','at-due','at-notes'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('at-assign').value='Anyone';}
+  document.getElementById('add-task-modal').style.display='flex';
+}
+function closeAddTaskModal(){document.getElementById('add-task-modal').style.display='none';_editingTaskId=null;}
+function saveFamilyTask(){
+  var name=document.getElementById('at-name').value.trim();if(!name){alert('Please enter a task name');return;}
+  var task={id:_editingTaskId||'task_'+Date.now(),name:name,due:document.getElementById('at-due').value,assignTo:document.getElementById('at-assign').value,notes:document.getElementById('at-notes').value.trim(),done:false,createdAt:new Date().toISOString()};
+  if(_editingTaskId){var idx=familyTasks.findIndex(function(t){return t.id===_editingTaskId;});if(idx>-1){task.done=familyTasks[idx].done;familyTasks[idx]=task;}}
+  else familyTasks.push(task);
+  saveFamilyTasks();closeAddTaskModal();renderFamilyTasks(window._taskFilter||'all',window._memberFilter||'all');
+}
+function editFamilyTask(id){var t=familyTasks.find(function(x){return x.id===id;});if(t)openAddTaskModal(t);}
+function filterTasks(f,btn){window._taskFilter=f;document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');renderFamilyTasks(f,window._memberFilter||'all');}
+function filterByMember(){var v=document.getElementById('filter-member').value;window._memberFilter=v;renderFamilyTasks(window._taskFilter||'all',v);}
+function addQuickTask(){openAddTaskModal();}
+// =============================================
+// DRAWER SYSTEM
+// =============================================
+function openDrawer(type){
+  var backdrop=document.getElementById('drawer-backdrop');var drawer=document.getElementById('drawer');var title=document.getElementById('drawer-title');var body=document.getElementById('drawer-body');
+  if(!drawer||!body)return;
+  backdrop.style.display='block';drawer.style.display='flex';
+  if(type==='bills'){
+    title.textContent='💳 Bills';loadBills();
+    if(stewardBills.length===0){body.innerHTML='<div style="font-size:0.78rem;color:#4b5563">No bills yet. Add them in the Bill Pay tab.</div>';return;}
+    body.innerHTML='<div style="font-size:0.68rem;color:#6b7280;margin-bottom:0.8rem">Edit or remove bills below</div>'+
+      stewardBills.map(function(b){return'<div class="drawer-list-item"><div style="flex:1"><div class="drawer-item-name">'+b.name+'</div><div class="drawer-item-sub">'+(b.provider||'')+(b.amount?' · $'+b.amount:'')+' '+(b.dueDay?'· due day '+b.dueDay:'')+'</div></div><button class="drawer-edit-btn" onclick="openAddBillModal(''+b.id+'');closeDrawer()">Edit</button><button class="drawer-remove-btn" onclick="deleteBill(''+b.id+'');openDrawer('bills')">×</button></div>';}).join('')+
+      '<div style="margin-top:1rem"><button class="btn" style="width:100%" onclick="closeDrawer();openAddBillModal()">+ Add Bill</button></div>';
+  }
+  else if(type==='family'){
+    title.textContent='👨‍👩‍👧‍👦 Family Members';
+    var raw=localStorage.getItem('stewardUser');var members=[];
+    try{var u=JSON.parse(raw||'{}');if(u.name)members.push({name:u.name,role:'You',city:u.city||''});if(u.kids)u.kids.forEach(function(k){members.push({name:k.name,role:'Child · age '+k.age,city:''});});}catch(e){}
+    if(members.length===0){body.innerHTML='<div style="font-size:0.78rem;color:#4b5563">No family members found.</div>';return;}
+    body.innerHTML='<div style="font-size:0.68rem;color:#6b7280;margin-bottom:0.8rem">Your family</div>'+members.map(function(m){var ini=m.name.split(' ').map(function(p){return p[0];}).join('').toUpperCase().slice(0,2);return'<div class="drawer-list-item"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#38d9a9,#60a5fa);display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:800;color:#0f1117;flex-shrink:0">'+ini+'</div><div style="flex:1"><div class="drawer-item-name">'+m.name+'</div><div class="drawer-item-sub">'+m.role+(m.city?' · '+m.city:'')+'</div></div></div>';}).join('');
+  }
+  else if(type==='integrations'){
+    title.textContent='🔌 Integrations';
+    var ir=localStorage.getItem('stewardIntegrations');var ints={};try{ints=JSON.parse(ir||'{}');}catch(e){}
+    var keys=Object.keys(ints);
+    if(keys.length===0){body.innerHTML='<div style="font-size:0.78rem;color:#4b5563;margin-bottom:0.8rem">No integrations connected yet.</div><button class="btn" style="width:100%" onclick="closeDrawer();navTo('integrations')">Go to Integrations</button>';return;}
+    body.innerHTML='<div style="font-size:0.68rem;color:#6b7280;margin-bottom:0.8rem">'+keys.length+' connected</div>'+keys.map(function(id){var c=ints[id];return'<div class="drawer-list-item"><span style="font-size:1.2rem">'+c.logo+'</span><div style="flex:1"><div class="drawer-item-name">'+c.name+'</div><div class="drawer-item-sub">'+(c.balance||'')+' '+(c.dueDate?'· due '+c.dueDate:'')+' · '+c.status+'</div></div><button class="drawer-remove-btn" onclick="disconnectProvider(''+id+'');openDrawer('integrations')" style="color:#f87171">×</button></div>';}).join('')+
+      '<div style="margin-top:1rem"><button class="btn-ghost" style="width:100%" onclick="closeDrawer();navTo('integrations')">+ Add Integration</button></div>';
+  }
+  else if(type==='plan'){
+    title.textContent='⭐ Your Plan';
+    var raw2=localStorage.getItem('stewardUser');var planName='family',planPrice='19.99',promo='';
+    try{var u2=JSON.parse(raw2||'{}');planName=u2.plan||'family';planPrice=u2.planPrice||'19.99';promo=u2.promoCode?'Promo: '+u2.promoCode:'';}catch(e){}
+    body.innerHTML='<div style="background:#1e2332;border:1px solid rgba(56,217,169,0.2);border-radius:9px;padding:1.2rem;margin-bottom:1rem"><div style="font-size:0.65rem;color:#38d9a9;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Current Plan</div><div style="font-family:'Lora',serif;font-size:1.6rem;font-weight:600;margin-bottom:0.2rem">'+planName.charAt(0).toUpperCase()+planName.slice(1)+'</div><div style="font-size:0.78rem;color:#6b7280">$'+planPrice+'/mo'+(promo?' · '+promo:'')+'</div></div><button class="btn" style="width:100%;margin-bottom:0.6rem">Upgrade Plan</button><button class="btn-ghost" style="width:100%">Manage Billing</button>';
+  }
+}
+function closeDrawer(){document.getElementById('drawer-backdrop').style.display='none';document.getElementById('drawer').style.display='none';}
+// =============================================
+// HOOK INTO NAV + INIT
+// =============================================
+var _origNavTo2=navTo;
+navTo=function(id){
+  _origNavTo2(id);
+  if(id==='bills')renderBillsPanel();
+  if(id==='supplies'){populateMemberSelects();renderFamilyTasks('all','all');}
+  if(id==='deals')renderFeaturedDeals();
+};
+renderFeaturedDeals();
+renderBillsPanel();
+populateMemberSelects();
+renderFamilyTasks('all','all');
 </script>
 </body>
 </html>
